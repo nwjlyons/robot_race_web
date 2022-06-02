@@ -10,7 +10,7 @@ defmodule RobotRaceWeb.Components do
   @spec alert(%{:msg => String.t()}) :: Phoenix.LiveView.Rendered.t()
   def alert(%{msg: _msg} = assigns) do
     ~H"""
-    <div class="absolute text-red font-mono flex flex-col items-center w-full p-4 z-10">
+    <div class="text-red font-mono flex flex-col items-center w-full p-4 z-10">
       <%= @msg %>
     </div>
     """

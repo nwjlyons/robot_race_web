@@ -19,8 +19,8 @@ defmodule RobotRaceWeb.LobbyLive do
     </canvas>
     <div class="absolute h-full w-full flex flex-col justify-center items-center">
       <div class="p-4">
-        <div class="sm:mb-8">
-          <h1 class="text-gray font-mono text-shadow-green text-center text-6xl sm:text-7xl m-0">
+        <div class="sm:mb-8 text-center">
+          <h1 class="text-gray font-mono text-shadow-green inline-block text-6xl sm:text-7xl m-0">
             Robot
             <br />
             Race
@@ -65,7 +65,7 @@ defmodule RobotRaceWeb.LobbyLive do
   def mount(params, _session, socket) do
     {:ok,
      assign(socket,
-       changeset: JoinGameForm.changeset(%JoinGameForm{}),
+       changeset: JoinGameForm.changeset(),
        game_id: Map.get(params, "id"),
        form_action: form_action(socket, params),
        submit_text: if(joining?(params), do: "Join", else: "Start new game"),
@@ -75,29 +75,16 @@ defmodule RobotRaceWeb.LobbyLive do
 
   @impl Phoenix.LiveView
   def handle_event("validate", %{"join_game_form" => join_game_form}, socket) do
-    changeset = JoinGameForm.changeset(%JoinGameForm{}, join_game_form)
-
-    case JoinGameForm.validate(changeset) do
-      {:ok, join_game_form_schema} ->
-        {:noreply, assign(socket, changeset: JoinGameForm.changeset(join_game_form_schema))}
-
-      {:error, changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
+    changeset = JoinGameForm.validate(join_game_form)
+    {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("submit", %{"join_game_form" => join_game_form}, socket) do
-    changeset = JoinGameForm.changeset(%JoinGameForm{}, join_game_form)
+    case JoinGameForm.submit(join_game_form) do
+      {:ok, _join_game_form_schema} ->
+        {:noreply, assign(socket, trigger_action: true)}
 
-    case JoinGameForm.submit(changeset, socket.assigns.game_id) do
-      {:ok, join_game_form_schema} ->
-        {:noreply,
-         assign(socket,
-           changeset: JoinGameForm.changeset(join_game_form_schema),
-           trigger_action: true
-         )}
-
-      {:error, changeset} ->
+      {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
@@ -115,7 +102,7 @@ defmodule RobotRaceWeb.LobbyLive do
   def handle_event(_event, _params, socket), do: {:noreply, socket}
 
   defp form_action(%Phoenix.LiveView.Socket{} = socket, %{"id" => id}),
-    do: Routes.game_path(socket, :update, id)
+    do: Routes.game_path(socket, :join, id)
 
   defp form_action(%Phoenix.LiveView.Socket{} = socket, _params),
     do: Routes.game_path(socket, :create)

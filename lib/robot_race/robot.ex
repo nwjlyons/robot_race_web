@@ -5,16 +5,27 @@ defmodule RobotRace.Robot do
 
   alias RobotRace.Id
 
-  @derive {Jason.Encoder, only: [:name, :score]}
-  defstruct id: nil, name: "", score: 0
+  @roles [:guest, :admin]
 
-  @type t() :: %__MODULE__{id: Id.t(), name: String.t(), score: pos_integer()}
+  @derive {Jason.Encoder, only: [:name, :score]}
+  defstruct id: nil, name: "", role: :guest, score: 0
+
+  @type t() :: %__MODULE__{
+          id: Id.t(),
+          name: String.t(),
+          role: role(),
+          score: pos_integer()
+        }
+
+  @type role() :: :guest | :admin
+
+  defguard is_role(role) when role in @roles
 
   @doc """
-  Create a robot.
+  New robot.
   """
-  @spec new(%{name: String.t()}) :: t()
-  def new(%{name: name}) when is_binary(name) do
-    %__MODULE__{id: Id.new(), name: name}
+  @spec new(String.t(), role()) :: t()
+  def new(name, role) when is_binary(name) and is_role(role) do
+    %__MODULE__{id: Id.new(), name: name, role: role}
   end
 end

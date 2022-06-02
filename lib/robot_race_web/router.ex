@@ -17,7 +17,7 @@ defmodule RobotRaceWeb.Router do
 
     live "/:id/join", RobotRaceWeb.LobbyLive, :join, container: {:div, class: "h-full flex"}
     get "/:id", RobotRaceWeb.GameController, :show
-    post "/:id", RobotRaceWeb.GameController, :update
+    post "/:id", RobotRaceWeb.GameController, :join
     post "/", RobotRaceWeb.GameController, :create
     live "/", RobotRaceWeb.LobbyLive, :create, container: {:div, class: "h-full flex"}
   end

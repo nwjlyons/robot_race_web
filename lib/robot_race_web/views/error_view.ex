@@ -1,5 +1,8 @@
 defmodule RobotRaceWeb.ErrorView do
-  def render("500.html"), do: "500"
+  use RobotRaceWeb, :view
 
-  def render("404.html"), do: "404"
+  def template_not_found(template, _assigns) do
+    error = Phoenix.Controller.status_message_from_template(template)
+    Phoenix.View.render(__MODULE__, "error.html", error: error)
+  end
 end

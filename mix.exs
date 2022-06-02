@@ -6,6 +6,7 @@ defmodule RobotRaceWeb.MixProject do
       app: :robot_race_web,
       version: "0.1.0",
       elixir: "~> 1.12",
+      elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -20,6 +21,10 @@ defmodule RobotRaceWeb.MixProject do
       mod: {RobotRaceWeb.Application, []}
     ]
   end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
@@ -36,8 +41,9 @@ defmodule RobotRaceWeb.MixProject do
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:uuid, "~> 1.1"},
       {:ordered_map, "~> 0.0.5"},
+      {:optimal, "~> 0.3.6"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
+      {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false}
     ]
   end
 

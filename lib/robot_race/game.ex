@@ -2,70 +2,99 @@ defmodule RobotRace.Game do
   @moduledoc """
   Game struct and functions.
   """
+  alias RobotRace.Config
   alias RobotRace.Id
   alias RobotRace.Robot
 
   require RobotRace.Id
 
-  @winning_score 25
+  @enforce_keys [:id, :winning_score, :max_robots, :countdown, :config]
+  defstruct [
+    :id,
+    :winning_score,
+    :max_robots,
+    :countdown,
+    :config,
+    robots: OrderedMap.new(),
+    state: :setup
+  ]
 
-  @enforce_keys [:id]
-  defstruct id: nil, robots: OrderedMap.new(), winning_score: @winning_score, state: :waiting
-
-  @type t :: %__MODULE__{
+  @type t() :: %__MODULE__{
           id: Id.t(),
-          robots: OrderedMap.t(),
           winning_score: pos_integer(),
+          max_robots: pos_integer(),
+          countdown: pos_integer(),
+          config: Config.t(),
+          robots: OrderedMap.t(),
           state: state()
         }
-  @type state :: :waiting | :playing | :finished
+  @type state() :: :setup | :counting_down | :playing | :finished
 
   @doc """
   New game.
   """
-  @spec new(%{winning_score: pos_integer()}) :: t()
-  def new(%{winning_score: winning_score}) when winning_score > 0,
-    do: %__MODULE__{id: Id.new(), winning_score: winning_score}
-
-  @spec new() :: t()
-  def new(), do: %__MODULE__{id: Id.new()}
+  @spec new(Config.t()) :: t()
+  def new(%Config{} = config \\ %Config{}) do
+    %__MODULE__{
+      id: Id.new(),
+      winning_score: config.winning_score,
+      max_robots: config.max_robots,
+      countdown: config.countdown,
+      config: config
+    }
+  end
 
   @doc """
   Join game.
   """
-  @spec join(t(), Robot.t()) :: t()
-  def join(%__MODULE__{robots: robots, state: :waiting} = game, %Robot{} = robot) do
-    %__MODULE__{game | robots: OrderedMap.put(robots, robot.id, robot)}
+  @spec join(t(), Robot.t()) :: {:ok, t()} | {:error, :game_in_progress} | {:error, :max_robots}
+  def join(%__MODULE__{state: state}, %Robot{})
+      when state in [:counting_down, :playing, :finished] do
+    {:error, :game_in_progress}
   end
 
-  def join(%__MODULE__{} = game, %Robot{} = _robot), do: game
+  def join(%__MODULE__{robots: %{size: size}, max_robots: max_robots}, %Robot{})
+      when size >= max_robots do
+    {:error, :max_robots}
+  end
+
+  def join(%__MODULE__{} = game, %Robot{} = robot) do
+    {:ok, %__MODULE__{game | robots: OrderedMap.put(game.robots, robot.id, robot)}}
+  end
 
   @doc """
-  Increment robot's score.
+  Score a point.
   """
-  @spec increment(t(), Id.t()) :: t()
-  def increment(%__MODULE__{state: :playing} = game, robot_id) when Id.is_id(robot_id) do
+  @spec score_point(t(), Id.t()) :: t()
+  def score_point(%__MODULE__{state: :playing} = game, robot_id) when Id.is_id(robot_id) do
     {:ok, robot} = OrderedMap.fetch(game.robots, robot_id)
     robot = %Robot{robot | score: robot.score + 1}
     game = %__MODULE__{game | robots: OrderedMap.put(game.robots, robot.id, robot)}
 
     if robot.score >= game.winning_score do
-      finish(game)
+      %__MODULE__{game | state: :finished}
     else
       game
     end
   end
 
-  def increment(%__MODULE__{} = game, _robot_id), do: game
+  def score_point(%__MODULE__{} = game, robot_id) when Id.is_id(robot_id), do: game
 
   @doc """
-  List robots by score in descending order.
+  List robots in insertion order.
   """
-  @spec score_board(t()) :: [Robot.t()]
-  def score_board(%__MODULE__{robots: robots}) do
-    robots
-    |> OrderedMap.values()
-    |> Enum.sort_by(fn %Robot{score: score} -> score end, :desc)
+  @spec robots(t()) :: list(Robot.t())
+  def robots(%__MODULE__{} = game) do
+    OrderedMap.values(game.robots)
+  end
+
+  @doc """
+  Is Robot an admin.
+  """
+  @spec admin?(t(), Id.t()) :: boolean()
+  def admin?(%__MODULE__{} = game, robot_id) when Id.is_id(robot_id) do
+    {:ok, robot} = OrderedMap.fetch(game.robots, robot_id)
+    robot.role == :admin
   end
 
   @doc """
@@ -75,11 +104,54 @@ defmodule RobotRace.Game do
   def play(%__MODULE__{} = game), do: %__MODULE__{game | state: :playing}
 
   @doc """
-  Play again
+  Countdown to start.
+  """
+  @spec countdown(t()) :: t()
+  def countdown(%__MODULE__{state: :setup} = game) do
+    %__MODULE__{game | state: :counting_down}
+  end
+
+  def countdown(%__MODULE__{countdown: countdown} = game) when countdown > 0 do
+    %__MODULE__{game | state: :counting_down, countdown: countdown - 1}
+  end
+
+  def countdown(%__MODULE__{countdown: 0} = game) do
+    %__MODULE__{game | state: :playing}
+  end
+
+  @doc """
+  List robots by score in descending order.
+  """
+  @spec score_board(t()) :: list(Robot.t())
+  def score_board(%__MODULE__{robots: robots}) do
+    robots
+    |> OrderedMap.values()
+    |> Enum.sort_by(fn %Robot{score: score} -> score end, :desc)
+  end
+
+  @doc """
+  Return winning robot.
+  """
+  @spec winner(t()) :: Robot.t()
+  def winner(%__MODULE__{} = game) do
+    game
+    |> score_board()
+    |> hd()
+  end
+
+  @doc """
+  Play again.
   """
   @spec play_again(t()) :: t()
   def play_again(%__MODULE__{} = game) do
-    %__MODULE__{game | state: :waiting, robots: reset_robot_scores(game.robots)}
+    %__MODULE__{
+      game
+      | winning_score: game.config.winning_score,
+        max_robots: game.config.max_robots,
+        countdown: game.config.countdown,
+        robots: reset_robot_scores(game.robots),
+        state: :setup
+    }
   end
 
   defp reset_robot_scores(%OrderedMap{} = robots) do
@@ -87,6 +159,4 @@ defmodule RobotRace.Game do
       OrderedMap.put(robots, robot.id, %Robot{robot | score: 0})
     end)
   end
-
-  defp finish(%__MODULE__{} = game), do: %__MODULE__{game | state: :finished}
 end

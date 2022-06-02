@@ -77,11 +77,7 @@
           {Credo.Check.Consistency.TabsOrSpaces, []},
           {Credo.Check.Readability.ImplTrue, []},
           {Credo.Check.Readability.MultiAlias, []},
-          {Credo.Check.Readability.StrictModuleLayout,
-           [
-             order:
-               ~w/shortdoc moduledoc behaviour use import alias require module_attribute defstruct opaque type typep callback macrocallback optional_callbacks /a
-           ]},
+          {Credo.Check.Readability.StrictModuleLayout, []},
           {Credo.Check.Consistency.UnusedVariableNames, []},
           {CredoContrib.Check.ModuleAlias, []},
 

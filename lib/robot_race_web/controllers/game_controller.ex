@@ -1,7 +1,7 @@
 defmodule RobotRaceWeb.GameController do
   use RobotRaceWeb, :controller
 
-  import Phoenix.LiveView.Controller
+  import Phoenix.LiveView.Controller, only: [live_render: 3]
 
   alias RobotRace.Game
   alias RobotRace.Robot
@@ -12,19 +12,15 @@ defmodule RobotRaceWeb.GameController do
 
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(%Plug.Conn{} = conn, %{"join_game_form" => %{"name" => name}}) do
-    robot = Robot.new(%{name: name})
+    robot = Robot.new(name, :admin)
     game = Game.new()
-
-    DynamicSupervisor.start_child(
-      RobotRaceWeb.DynamicSupervisor,
-      {RobotRaceWeb.GameServer, %{game: game, admin_id: robot.id}}
-    )
-
-    %GameServer{} = GameServer.join(game.id, robot)
+    {:ok, _pid} = GameServer.new(game)
+    {:ok, %Game{}} = GameServer.join(game.id, robot)
 
     game_path = Routes.game_path(conn, :show, game.id)
 
     conn
+    |> assign(:game_id, game.id)
     |> put_resp_cookie(@cookie_name, robot.id,
       path: game_path,
       sign: true,
@@ -53,19 +49,33 @@ defmodule RobotRaceWeb.GameController do
     end
   end
 
-  @spec update(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def update(%Plug.Conn{} = conn, %{"id" => game_id, "join_game_form" => %{"name" => name}}) do
-    %Robot{} = robot = Robot.new(%{name: name})
-    %GameServer{} = GameServer.join(game_id, robot)
+  @spec join(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def join(%Plug.Conn{} = conn, %{"id" => game_id, "join_game_form" => %{"name" => name}}) do
+    %Robot{} = robot = Robot.new(name, :guest)
 
-    game_path = Routes.game_path(conn, :show, game_id)
+    case GameServer.join(game_id, robot) do
+      {:ok, %Game{}} ->
+        game_path = Routes.game_path(conn, :show, game_id)
 
-    conn
-    |> put_resp_cookie(@cookie_name, robot.id,
-      path: game_path,
-      sign: true,
-      max_age: @cookie_max_age
-    )
-    |> redirect(to: game_path)
+        conn
+        |> put_resp_cookie(@cookie_name, robot.id,
+          path: game_path,
+          sign: true,
+          max_age: @cookie_max_age
+        )
+        |> redirect(to: game_path)
+
+      {:error, :game_in_progress} ->
+        conn
+        |> put_view(RobotRaceWeb.ErrorView)
+        |> put_status(:unprocessable_entity)
+        |> render("error.html", error: "game in progress")
+
+      {:error, :max_robots} ->
+        conn
+        |> put_view(RobotRaceWeb.ErrorView)
+        |> put_status(:unprocessable_entity)
+        |> render("error.html", error: "game full")
+    end
   end
 end
