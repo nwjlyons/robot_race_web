@@ -1,0 +1,10 @@
+<%= if success = get_flash(@conn, :success) do %>
+  <Components.alert msg={success} />
+<% end %>
+<%= if info = get_flash(@conn, :info) do %>
+  <Components.alert msg={info} />
+<% end %>
+<%= if error = get_flash(@conn, :error) do %>
+  <Components.alert msg={error} />
+<% end %>
+<%= @inner_content %>
