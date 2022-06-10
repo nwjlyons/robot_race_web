@@ -27,7 +27,7 @@ class Eye {
         // Pupil
         ctx.fillStyle = pupilColour;
         let pupilLength = scleraLength / 2.5;
-        let pupilOffset = (scleraLength/2) - pupilLength/2;
+        let pupilOffset = (scleraLength / 2) - pupilLength / 2;
         let pupilX = scleraX + pupilOffset;
         let pupilY = scleraY + pupilOffset;
         ctx.fillRect(pupilX, pupilY, pupilLength, pupilLength);
@@ -109,7 +109,7 @@ export default class Robot {
         // Eyes
         let column = this.length / 11;
         let eyeLength = column * 4;
-        let eyeYoffset = this.y + column*1.75
+        let eyeYoffset = this.y + column * 1.75
         // Left eye
         let leftEyeX = this.x + column;
         new Eye(leftEyeX, eyeYoffset, eyeLength).render(canvas);
