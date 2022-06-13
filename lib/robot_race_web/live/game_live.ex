@@ -43,21 +43,14 @@ defmodule RobotRaceWeb.GameLive do
       <div class="prose">
         <%= if @admin? do %>
           <p class="text-center">Invite players</p>
-          <button
-            id="copy-share-link"
-            class="retro-button sm:p-4 sm:text-base mb-4"
-            data-copy-link={@game_url}
-            phx-hook="CopyLink"
-          >
+          <.button id="copy-share-link" data-copy-link={@game_url} phx-hook="CopyLink">
             Copy invite link
-          </button>
+          </.button>
         <% else %>
           <p class="text-center">Get ready</p>
         <% end %>
         <%= if @admin? do %>
-          <button class="retro-button sm:p-4 sm:text-base" phx-click="countdown">
-            Start countdown
-          </button>
+          <.button phx-click="countdown">Start countdown</.button>
         <% end %>
       </div>
     </div>

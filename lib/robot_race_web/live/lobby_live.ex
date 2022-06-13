@@ -63,7 +63,7 @@ defmodule RobotRaceWeb.LobbyLive do
               ) %>
             </div>
             <div>
-              <.button value={@submit_text} />
+              <.button><%= @submit_text %></.button>
             </div>
           </.form>
         </div>
