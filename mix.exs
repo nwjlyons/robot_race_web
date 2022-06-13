@@ -43,7 +43,8 @@ defmodule RobotRaceWeb.MixProject do
       {:ordered_map, "~> 0.0.5"},
       {:optimal, "~> 0.3.6"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false}
+      {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 

@@ -14,7 +14,7 @@ defmodule RobotRace.Robot do
           id: Id.t(),
           name: String.t(),
           role: role(),
-          score: pos_integer()
+          score: non_neg_integer()
         }
 
   @type role() :: :guest | :admin

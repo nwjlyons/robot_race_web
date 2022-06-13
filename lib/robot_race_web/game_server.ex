@@ -125,12 +125,15 @@ defmodule RobotRaceWeb.GameServer do
     Logger.debug("counting down id=#{game.id} countdown=#{game.countdown}")
     game = Game.countdown(game)
 
-    if game.state == :counting_down do
-      if game.countdown > 0 do
+    case game do
+      %Game{state: :counting_down, countdown: countdown} when countdown > 0 ->
         schedule_countdown(1_000)
-      else
+
+      %Game{state: :counting_down} ->
         schedule_countdown(200)
-      end
+
+      _ ->
+        nil
     end
 
     broadcast(game)

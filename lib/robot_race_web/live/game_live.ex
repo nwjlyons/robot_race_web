@@ -10,6 +10,20 @@ defmodule RobotRaceWeb.GameLive do
   require RobotRace.Id
 
   @impl Phoenix.LiveView
+  def mount(_params, %{"game_id" => game_id, "robot_id" => robot_id}, socket) do
+    %Game{} = game = GameServer.get(game_id)
+    if connected?(socket), do: GameServer.subscribe(game)
+
+    {:ok,
+     assign(socket,
+       game: game,
+       robot_id: robot_id,
+       admin?: Game.admin?(game, robot_id),
+       game_url: Routes.game_url(socket, :show, game.id)
+     )}
+  end
+
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <%= dialogs(assigns) %>
@@ -27,7 +41,7 @@ defmodule RobotRaceWeb.GameLive do
     ~H"""
     <div class="absolute h-full w-full flex flex-col justify-center items-center z-10">
       <div class="prose">
-        <%= if(@admin?) do %>
+        <%= if @admin? do %>
           <p class="text-center">Invite players</p>
           <button
             id="copy-share-link"
@@ -40,7 +54,7 @@ defmodule RobotRaceWeb.GameLive do
         <% else %>
           <p class="text-center">Get ready</p>
         <% end %>
-        <%= if(@admin?) do %>
+        <%= if @admin? do %>
           <button class="retro-button sm:p-4 sm:text-base" phx-click="countdown">
             Start countdown
           </button>
@@ -67,7 +81,7 @@ defmodule RobotRaceWeb.GameLive do
         <%= Game.winner(@game).name %> wins!
       </h1>
 
-      <%= if(true) do %>
+      <%= if @admin? do %>
         <div class="prose">
           <button class="retro-button sm:p-4 sm:text-base" phx-click="play_again">Play again</button>
         </div>
@@ -77,44 +91,6 @@ defmodule RobotRaceWeb.GameLive do
   end
 
   defp dialogs(assigns), do: ~H""
-
-  @impl Phoenix.LiveView
-  def mount(_params, %{"game_id" => game_id, "robot_id" => robot_id}, socket) do
-    %Game{} = game = GameServer.get(game_id)
-    if connected?(socket), do: GameServer.subscribe(game)
-
-    {:ok,
-     assign(socket,
-       game: game,
-       robot_id: robot_id,
-       admin?: Game.admin?(game, robot_id),
-       game_url: Routes.game_url(socket, :show, game.id)
-     )}
-  end
-
-  @impl Phoenix.LiveView
-  def handle_info(
-        %{topic: "game:" <> game_id, event: "update", payload: %{game: %Game{} = game}},
-        socket
-      ) do
-    if socket.assigns.game.id == game_id do
-      {:noreply, socket |> assign(game: game) |> push_game_state()}
-    else
-      {:noreply, socket}
-    end
-  end
-
-  def handle_info(%{topic: "game:" <> game_id, event: "timeout"}, socket) do
-    if socket.assigns.game.id == game_id do
-      {:noreply, redirect(socket, to: Routes.lobby_path(socket, :create))}
-    else
-      {:noreply, socket}
-    end
-  end
-
-  def handle_info(_msg, socket) do
-    {:noreply, socket}
-  end
 
   @impl Phoenix.LiveView
   def handle_event("race_track_mounted", _params, socket) do
@@ -142,6 +118,35 @@ defmodule RobotRaceWeb.GameLive do
   end
 
   def handle_event(_event, _params, socket) do
+    {:noreply, socket}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info(
+        %{topic: "game:" <> game_id, event: "update", payload: %{game: %Game{} = game}},
+        socket
+      ) do
+    if socket.assigns.game.id == game_id do
+      {
+        :noreply,
+        socket
+        |> assign(game: game)
+        |> push_game_state()
+      }
+    else
+      {:noreply, socket}
+    end
+  end
+
+  def handle_info(%{topic: "game:" <> game_id, event: "timeout"}, socket) do
+    if socket.assigns.game.id == game_id do
+      {:noreply, redirect(socket, to: Routes.lobby_path(socket, :create))}
+    else
+      {:noreply, socket}
+    end
+  end
+
+  def handle_info(_msg, socket) do
     {:noreply, socket}
   end
 

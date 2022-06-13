@@ -8,6 +8,18 @@ defmodule RobotRaceWeb.LobbyLive do
   alias RobotRaceWeb.JoinGameForm
 
   @impl Phoenix.LiveView
+  def mount(params, _session, socket) do
+    {:ok,
+     assign(socket,
+       changeset: JoinGameForm.changeset(),
+       game_id: Map.get(params, "id"),
+       form_action: form_action(socket, params),
+       submit_text: if(joining?(params), do: "Join", else: "Start new game"),
+       trigger_action: false
+     )}
+  end
+
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <canvas
@@ -59,18 +71,6 @@ defmodule RobotRaceWeb.LobbyLive do
       </div>
     </div>
     """
-  end
-
-  @impl Phoenix.LiveView
-  def mount(params, _session, socket) do
-    {:ok,
-     assign(socket,
-       changeset: JoinGameForm.changeset(),
-       game_id: Map.get(params, "id"),
-       form_action: form_action(socket, params),
-       submit_text: if(joining?(params), do: "Join", else: "Start new game"),
-       trigger_action: false
-     )}
   end
 
   @impl Phoenix.LiveView
