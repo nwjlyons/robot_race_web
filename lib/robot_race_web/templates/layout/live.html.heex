@@ -1,10 +1,10 @@
 <%= if success = live_flash(@flash, :success) do %>
-  <Components.alert msg={success} />
+  <.alert msg={success} />
 <% end %>
 <%= if info = live_flash(@flash, :info) do %>
-  <Components.alert msg={info} />
+  <.alert msg={info} />
 <% end %>
 <%= if error = live_flash(@flash, :error) do %>
-  <Components.alert msg={error} />
+  <.alert msg={error} />
 <% end %>
 <%= @inner_content %>

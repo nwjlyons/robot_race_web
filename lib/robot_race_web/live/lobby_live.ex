@@ -29,13 +29,12 @@ defmodule RobotRaceWeb.LobbyLive do
       phx-hook="RaceTrack"
     >
     </canvas>
+
     <div class="absolute h-full w-full flex flex-col justify-center items-center">
       <div class="p-4">
         <div class="sm:mb-8 text-center">
           <h1 class="text-gray font-mono text-shadow-green inline-block text-6xl sm:text-7xl m-0">
-            Robot
-            <br />
-            Race
+            Robot <br /> Race
           </h1>
         </div>
         <div class="sm:mb-8">
@@ -64,7 +63,7 @@ defmodule RobotRaceWeb.LobbyLive do
               ) %>
             </div>
             <div>
-              <%= submit(@submit_text, class: "retro-button sm:p-4 sm:text-base") %>
+              <.button value={@submit_text} />
             </div>
           </.form>
         </div>

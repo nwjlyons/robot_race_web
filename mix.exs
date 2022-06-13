@@ -7,7 +7,7 @@ defmodule RobotRaceWeb.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix] ++ Mix.compilers(),
+      compilers: [:phoenix, :phoenix_live_view] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases()
@@ -30,7 +30,7 @@ defmodule RobotRaceWeb.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.6.8"},
-      {:phoenix_live_view, "~> 0.17.5"},
+      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
       {:phoenix_pubsub, "~> 2.0"},
       {:esbuild, "~> 0.1", runtime: Mix.env() == :dev},
