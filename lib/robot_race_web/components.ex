@@ -28,4 +28,19 @@ defmodule RobotRaceWeb.Components do
     </button>
     """
   end
+
+  @doc """
+  Racetrack component.
+  """
+  def racetrack(assigns) do
+    ~H"""
+    <canvas
+      id="racetrack"
+      class="absolute h-full w-full user-select-none"
+      phx-update="ignore"
+      phx-hook="RaceTrack"
+    >
+    </canvas>
+    """
+  end
 end

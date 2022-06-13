@@ -22,14 +22,7 @@ defmodule RobotRaceWeb.LobbyLive do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <canvas
-      id="racetrack"
-      class="absolute h-full w-full user-select-none"
-      phx-update="ignore"
-      phx-hook="RaceTrack"
-    >
-    </canvas>
-
+    <.racetrack />
     <div class="absolute h-full w-full flex flex-col justify-center items-center">
       <div class="p-4">
         <div class="sm:mb-8 text-center">

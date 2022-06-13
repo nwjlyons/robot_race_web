@@ -27,13 +27,7 @@ defmodule RobotRaceWeb.GameLive do
   def render(assigns) do
     ~H"""
     <%= dialogs(assigns) %>
-    <canvas
-      id="racetrack"
-      class="absolute h-full w-full user-select-none"
-      phx-update="ignore"
-      phx-hook="RaceTrack"
-    >
-    </canvas>
+    <.racetrack />
     """
   end
 
