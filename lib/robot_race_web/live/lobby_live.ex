@@ -8,13 +8,16 @@ defmodule RobotRaceWeb.LobbyLive do
   alias RobotRaceWeb.JoinGameForm
 
   @impl Phoenix.LiveView
-  def mount(params, _session, socket) do
+  def mount(%{} = params, %{} = _session, %Phoenix.LiveView.Socket{} = socket) do
+    game_id = Map.get(params, "id")
+    form = %JoinGameForm{}
     {:ok,
      assign(socket,
-       changeset: JoinGameForm.changeset(),
-       game_id: Map.get(params, "id"),
-       form_action: form_action(socket, params),
-       submit_text: if(joining?(params), do: "Join", else: "Start new game"),
+       form: form,
+       changeset: JoinGameForm.changeset(form, %{}),
+       game_id: game_id,
+       joining?: !!game_id,
+       form_action: form_action(socket, game_id),
        trigger_action: false
      )}
   end
@@ -56,7 +59,7 @@ defmodule RobotRaceWeb.LobbyLive do
               ) %>
             </div>
             <div>
-              <.button><%= @submit_text %></.button>
+              <.button><%= if(@joining?, do: "Join", else: "Start new game") %></.button>
             </div>
           </.form>
         </div>
@@ -66,14 +69,14 @@ defmodule RobotRaceWeb.LobbyLive do
   end
 
   @impl Phoenix.LiveView
-  def handle_event("validate", %{"join_game_form" => join_game_form}, socket) do
-    changeset = JoinGameForm.validate(join_game_form)
+  def handle_event("validate", %{"join_game_form" => form_params}, socket) do
+    changeset = JoinGameForm.validate(socket.assigns.form, form_params)
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def handle_event("submit", %{"join_game_form" => join_game_form}, socket) do
-    case JoinGameForm.submit(join_game_form) do
-      {:ok, _join_game_form_schema} ->
+  def handle_event("submit", %{"join_game_form" => form_params}, socket) do
+    case JoinGameForm.submit(socket.assigns.form, form_params) do
+      {:ok, %JoinGameForm{} = _form} ->
         {:noreply, assign(socket, trigger_action: true)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -93,12 +96,9 @@ defmodule RobotRaceWeb.LobbyLive do
 
   def handle_event(_event, _params, socket), do: {:noreply, socket}
 
-  defp form_action(%Phoenix.LiveView.Socket{} = socket, %{"id" => id}),
-    do: Routes.game_path(socket, :join, id)
-
-  defp form_action(%Phoenix.LiveView.Socket{} = socket, _params),
+  defp form_action(%Phoenix.LiveView.Socket{} = socket, nil),
     do: Routes.game_path(socket, :create)
 
-  defp joining?(%{"id" => _id}), do: true
-  defp joining?(_params), do: false
+  defp form_action(%Phoenix.LiveView.Socket{} = socket, id),
+    do: Routes.game_path(socket, :join, id)
 end
