@@ -12,21 +12,8 @@ defmodule RobotRaceWeb.GameController do
 
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(%Plug.Conn{} = conn, %{"join_game_form" => %{"name" => name}}) do
-    robot = Robot.new(name, :admin)
-    game = Game.new()
-    {:ok, _pid} = GameServer.new(game)
-    {:ok, %Game{}} = GameServer.join(game.id, robot)
-
-    game_path = Routes.game_path(conn, :show, game.id)
-
-    conn
-    |> assign(:game_id, game.id)
-    |> put_resp_cookie(@cookie_name, robot.id,
-      path: game_path,
-      sign: true,
-      max_age: @cookie_max_age
-    )
-    |> redirect(to: game_path)
+    {game, robot} = create_game(name)
+    redirect_to_game(conn, game, robot)
   end
 
   @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -54,28 +41,45 @@ defmodule RobotRaceWeb.GameController do
     %Robot{} = robot = Robot.new(name, :guest)
 
     case GameServer.join(game_id, robot) do
-      {:ok, %Game{}} ->
-        game_path = Routes.game_path(conn, :show, game_id)
-
-        conn
-        |> put_resp_cookie(@cookie_name, robot.id,
-          path: game_path,
-          sign: true,
-          max_age: @cookie_max_age
-        )
-        |> redirect(to: game_path)
+      {:ok, %Game{} = game} ->
+        redirect_to_game(conn, game, robot)
 
       {:error, :game_in_progress} ->
-        conn
-        |> put_view(RobotRaceWeb.ErrorView)
-        |> put_status(:unprocessable_entity)
-        |> render("error.html", error: "game in progress")
+        error("game in progress")
 
       {:error, :max_robots} ->
-        conn
-        |> put_view(RobotRaceWeb.ErrorView)
-        |> put_status(:unprocessable_entity)
-        |> render("error.html", error: "game full")
+        error("game full")
     end
+  end
+
+  @spec create_game(String.t()) :: {Game.t(), Robot.t()}
+  defp create_game(name) do
+    robot = Robot.new(name, :admin)
+    game = Game.new()
+    {:ok, _pid} = GameServer.new(game)
+    {:ok, %Game{}} = GameServer.join(game.id, robot)
+
+    {game, robot}
+  end
+
+  @spec redirect_to_game(Plug.Conn.t(), Game.t(), Robot.t()) :: Plug.Conn.t()
+  defp redirect_to_game(%Plug.Conn{} = conn, %Game{} = game, %Robot{} = robot) do
+    game_path = Routes.game_path(conn, :show, game.id)
+
+    conn
+    |> put_resp_cookie(@cookie_name, robot.id,
+      path: game_path,
+      sign: true,
+      max_age: @cookie_max_age
+    )
+    |> redirect(to: game_path)
+  end
+
+  @spec error(Plug.Conn.t(), String.t()) :: Plug.Conn.t()
+  defp error(%Plug.Conn{} = conn, message \\ "Error") when is_binary(message) do
+    conn
+    |> put_view(RobotRaceWeb.ErrorView)
+    |> put_status(:unprocessable_entity)
+    |> render("error.html", error: message)
   end
 end
