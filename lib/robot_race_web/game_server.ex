@@ -132,7 +132,7 @@ defmodule RobotRaceWeb.GameServer do
       %Game{state: :counting_down} ->
         schedule_countdown(200)
 
-      _ ->
+      %Game{} ->
         nil
     end
 
