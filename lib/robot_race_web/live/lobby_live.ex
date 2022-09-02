@@ -8,22 +8,30 @@ defmodule RobotRaceWeb.LobbyLive do
   alias RobotRaceWeb.JoinGameForm
 
   @impl Phoenix.LiveView
+  def mount(%{} = params, %{} = _session, %Phoenix.LiveView.Socket{} = socket) do
+    game_id = Map.get(params, "id")
+    form = %JoinGameForm{}
+
+    {:ok,
+     assign(socket,
+       form: form,
+       changeset: JoinGameForm.changeset(form, %{}),
+       game_id: game_id,
+       joining?: !!game_id,
+       form_action: form_action(game_id),
+       trigger_action: false
+     )}
+  end
+
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <canvas
-      id="racetrack"
-      class="absolute h-full w-full user-select-none"
-      phx-update="ignore"
-      phx-hook="RaceTrack"
-    >
-    </canvas>
+    <.racetrack />
     <div class="absolute h-full w-full flex flex-col justify-center items-center">
       <div class="p-4">
         <div class="sm:mb-8 text-center">
           <h1 class="text-gray font-mono text-shadow-green inline-block text-6xl sm:text-7xl m-0">
-            Robot
-            <br />
-            Race
+            Robot <br /> Race
           </h1>
         </div>
         <div class="sm:mb-8">
@@ -35,7 +43,7 @@ defmodule RobotRaceWeb.LobbyLive do
         </div>
         <div>
           <.form
-            let={f}
+            :let={f}
             for={@changeset}
             phx-change="validate"
             phx-submit="submit"
@@ -52,7 +60,7 @@ defmodule RobotRaceWeb.LobbyLive do
               ) %>
             </div>
             <div>
-              <%= submit(@submit_text, class: "retro-button sm:p-4 sm:text-base") %>
+              <.button><%= if(@joining?, do: "Join", else: "Start new game") %></.button>
             </div>
           </.form>
         </div>
@@ -62,26 +70,14 @@ defmodule RobotRaceWeb.LobbyLive do
   end
 
   @impl Phoenix.LiveView
-  def mount(params, _session, socket) do
-    {:ok,
-     assign(socket,
-       changeset: JoinGameForm.changeset(),
-       game_id: Map.get(params, "id"),
-       form_action: form_action(socket, params),
-       submit_text: if(joining?(params), do: "Join", else: "Start new game"),
-       trigger_action: false
-     )}
-  end
-
-  @impl Phoenix.LiveView
-  def handle_event("validate", %{"join_game_form" => join_game_form}, socket) do
-    changeset = JoinGameForm.validate(join_game_form)
+  def handle_event("validate", %{"join_game_form" => form_params}, socket) do
+    changeset = JoinGameForm.validate(socket.assigns.form, form_params)
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def handle_event("submit", %{"join_game_form" => join_game_form}, socket) do
-    case JoinGameForm.submit(join_game_form) do
-      {:ok, _join_game_form_schema} ->
+  def handle_event("submit", %{"join_game_form" => form_params}, socket) do
+    case JoinGameForm.submit(socket.assigns.form, form_params) do
+      {:ok, %JoinGameForm{} = _form} ->
         {:noreply, assign(socket, trigger_action: true)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -101,12 +97,9 @@ defmodule RobotRaceWeb.LobbyLive do
 
   def handle_event(_event, _params, socket), do: {:noreply, socket}
 
-  defp form_action(%Phoenix.LiveView.Socket{} = socket, %{"id" => id}),
-    do: Routes.game_path(socket, :join, id)
+  defp form_action(nil),
+    do: Routes.game_path(RobotRaceWeb.Endpoint, :create)
 
-  defp form_action(%Phoenix.LiveView.Socket{} = socket, _params),
-    do: Routes.game_path(socket, :create)
-
-  defp joining?(%{"id" => _id}), do: true
-  defp joining?(_params), do: false
+  defp form_action(id),
+    do: Routes.game_path(RobotRaceWeb.Endpoint, :join, id)
 end

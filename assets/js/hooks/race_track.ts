@@ -1,19 +1,19 @@
 import Robot from "../robot"
-import {cycle} from "../enum"
+import { cycle } from "../enum"
 
 const colours = ["cyan", "magenta", "yellow", "white"];
 
 export default {
     mounted(): void {
-        this.game = {winning_score: 0, robots: []};
+        this.game = { winning_score: 0, robots: [] };
         let canvas: HTMLCanvasElement = this.el;
 
         this.pushEvent("race_track_mounted", {})
         window.addEventListener('keyup', (event: KeyboardEvent) => {
-            this.pushEvent("score_point", {source: "keyboard", key: event.key, code: event.code})
+            this.pushEvent("score_point", { source: "keyboard", key: event.key, code: event.code })
         })
         window.addEventListener('touchstart', (event: TouchEvent) => {
-            this.pushEvent("score_point", {source: "touch"})
+            this.pushEvent("score_point", { source: "touch" })
         })
 
         this.handleEvent("game_updated", (game) => {
@@ -36,7 +36,7 @@ export default {
 
         for (let i: number = 0; i < this.game.robots.length; i++) {
             let robot = this.game.robots[i];
-            let x: number = (i * columnWidth) + (columnWidth/2) - (robotLength/2);
+            let x: number = (i * columnWidth) + (columnWidth / 2) - (robotLength / 2);
             let y: number = (canvas.height - (rowHeight * robot.score)) - robotLength;
             new Robot(x, y, robotLength, cycle(colours, i), robot.name).render(canvas);
         }
