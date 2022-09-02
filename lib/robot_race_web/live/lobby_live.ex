@@ -11,6 +11,7 @@ defmodule RobotRaceWeb.LobbyLive do
   def mount(%{} = params, %{} = _session, %Phoenix.LiveView.Socket{} = socket) do
     game_id = Map.get(params, "id")
     form = %JoinGameForm{}
+
     {:ok,
      assign(socket,
        form: form,
@@ -42,7 +43,7 @@ defmodule RobotRaceWeb.LobbyLive do
         </div>
         <div>
           <.form
-            let={f}
+            :let={f}
             for={@changeset}
             phx-change="validate"
             phx-submit="submit"
