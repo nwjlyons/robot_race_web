@@ -17,7 +17,7 @@ defmodule RobotRaceWeb.LobbyLive do
        changeset: JoinGameForm.changeset(form, %{}),
        game_id: game_id,
        joining?: !!game_id,
-       form_action: form_action(socket, game_id),
+       form_action: form_action(game_id),
        trigger_action: false
      )}
   end
@@ -96,9 +96,9 @@ defmodule RobotRaceWeb.LobbyLive do
 
   def handle_event(_event, _params, socket), do: {:noreply, socket}
 
-  defp form_action(%Phoenix.LiveView.Socket{} = socket, nil),
-    do: Routes.game_path(socket, :create)
+  defp form_action(nil),
+    do: Routes.game_path(RobotRaceWeb.Endpoint, :create)
 
-  defp form_action(%Phoenix.LiveView.Socket{} = socket, id),
-    do: Routes.game_path(socket, :join, id)
+  defp form_action(id),
+    do: Routes.game_path(RobotRaceWeb.Endpoint, :join, id)
 end

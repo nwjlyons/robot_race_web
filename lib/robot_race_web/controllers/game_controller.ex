@@ -45,10 +45,10 @@ defmodule RobotRaceWeb.GameController do
         redirect_to_game(conn, game, robot)
 
       {:error, :game_in_progress} ->
-        error("game in progress")
+        error(conn, "game in progress")
 
       {:error, :max_robots} ->
-        error("game full")
+        error(conn, "game full")
     end
   end
 

@@ -7,11 +7,11 @@ defmodule RobotRaceWeb.Components do
   @doc """
   Alert used for flash messages
   """
-
+  attr :msg, :string, required: true
   def alert(assigns) do
     ~H"""
     <div class="text-red font-mono flex flex-col items-center w-full p-4 z-10">
-      <%= render_slot(@inner_block) %>
+      <%= @msg %>
     </div>
     """
   end
@@ -20,7 +20,6 @@ defmodule RobotRaceWeb.Components do
   Button component.
   """
   attr :rest, :global
-
   def button(assigns) do
     ~H"""
     <button class="retro-button sm:p-4 sm:text-base" {@rest}>

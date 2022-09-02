@@ -5,7 +5,7 @@ defmodule RobotRaceWeb.JoinGameForm do
   use RobotRaceWeb.Forms
 
   embedded_schema do
-    field(:name, :string)
+    field(:name, :string, default: "")
   end
 
   @type t() :: %__MODULE__{name: String.t()}
