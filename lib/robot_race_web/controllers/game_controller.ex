@@ -13,6 +13,7 @@ defmodule RobotRaceWeb.GameController do
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(%Plug.Conn{} = conn, %{"join_game_form" => %{"name" => name}}) do
     {game, robot} = create_game(name)
+    conn = assign(conn, :game_id, game.id)
     redirect_to_game(conn, game, robot)
   end
 

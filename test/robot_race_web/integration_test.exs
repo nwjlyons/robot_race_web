@@ -26,6 +26,6 @@ defmodule RobotRaceWeb.IntegrationTest do
     assert redirected_to(conn_bender) =~ Routes.game_path(conn_bender, :show, game_id)
   end
 
-  test "create game"
-  test "redirected to join form"
+  #  test "create game"
+  #  test "redirected to join form"
 end
