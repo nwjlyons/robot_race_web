@@ -77,7 +77,7 @@ defmodule RobotRaceWeb.GameController do
   end
 
   @spec error(Plug.Conn.t(), String.t()) :: Plug.Conn.t()
-  defp error(%Plug.Conn{} = conn, message \\ "Error") when is_binary(message) do
+  defp error(%Plug.Conn{} = conn, message) when is_binary(message) do
     conn
     |> put_view(RobotRaceWeb.ErrorView)
     |> put_status(:unprocessable_entity)
