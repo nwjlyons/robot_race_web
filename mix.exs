@@ -40,7 +40,6 @@ defmodule RobotRaceWeb.MixProject do
       {:phoenix_ecto, "~> 4.4"},
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:uuid, "~> 1.1"},
-      {:ordered_map, "~> 0.0.5"},
       {:optimal, "~> 0.3.6"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
