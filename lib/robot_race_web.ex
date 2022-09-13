@@ -36,6 +36,7 @@ defmodule RobotRaceWeb do
 
       use Phoenix.HTML
 
+      import Phoenix.Component
       import RobotRaceWeb.Components
       alias RobotRaceWeb.Router.Helpers, as: Routes
     end
