@@ -61,7 +61,12 @@ defmodule RobotRace.Game do
   end
 
   def join(%__MODULE__{} = game, %Robot{} = robot) do
-    {:ok, %__MODULE__{game | robots: Map.put(game.robots, robot.id, robot), robots_order: game.robots_order ++ [robot.id]}}
+    {:ok,
+     %__MODULE__{
+       game
+       | robots: Map.put(game.robots, robot.id, robot),
+         robots_order: game.robots_order ++ [robot.id]
+     }}
   end
 
   @doc """
