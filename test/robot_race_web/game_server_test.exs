@@ -43,7 +43,7 @@ defmodule RobotRaceWeb.GameServerTest do
     end
 
     test "join full game", %{bender: bender, r2d2: r2d2} do
-      game = Game.new(%Config{max_robots: 1})
+      game = Game.new(%Config{num_robots: 1..1})
       {:ok, game} = Game.join(game, bender)
       GameServer.new(game)
       assert {:error, :max_robots} = GameServer.join(game.id, r2d2)

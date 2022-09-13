@@ -1,11 +1,16 @@
 defmodule RobotRaceWeb do
   @moduledoc false
 
+  def static_paths(), do: ~w(assets fonts images favicon.ico robots.txt)
+
   def controller() do
     quote do
       use Phoenix.Controller
 
-      alias RobotRaceWeb.Router.Helpers, as: Routes
+      use Phoenix.VerifiedRoutes,
+        endpoint: RobotRaceWeb.Endpoint,
+        router: RobotRaceWeb.Router,
+        statics: RobotRaceWeb.static_paths()
     end
   end
 
@@ -36,8 +41,13 @@ defmodule RobotRaceWeb do
 
       use Phoenix.HTML
 
+      use Phoenix.VerifiedRoutes,
+        endpoint: RobotRaceWeb.Endpoint,
+        router: RobotRaceWeb.Router,
+        statics: RobotRaceWeb.static_paths()
+
+      import Phoenix.Component
       import RobotRaceWeb.Components
-      alias RobotRaceWeb.Router.Helpers, as: Routes
     end
   end
 

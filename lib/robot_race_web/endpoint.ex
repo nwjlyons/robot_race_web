@@ -1,4 +1,5 @@
 defmodule RobotRaceWeb.Endpoint do
+  @moduledoc false
   use Phoenix.Endpoint, otp_app: :robot_race_web
 
   @session_options [
@@ -18,7 +19,7 @@ defmodule RobotRaceWeb.Endpoint do
     at: "/",
     from: :robot_race_web,
     gzip: true,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    only: ~w(doc assets fonts images favicon.ico robots.txt)
   )
 
   if code_reloading? do

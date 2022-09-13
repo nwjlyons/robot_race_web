@@ -15,8 +15,8 @@ defmodule RobotRace.GameTest do
 
   describe "new/1" do
     test "with max robots" do
-      config = %Config{max_robots: 42}
-      assert %Game{max_robots: 42, config: ^config} = Game.new(config)
+      config = %Config{num_robots: 2..42}
+      assert %Game{num_robots: 2..42, config: ^config} = Game.new(config)
     end
 
     test "with winning score" do
@@ -31,7 +31,9 @@ defmodule RobotRace.GameTest do
 
     test "defaults" do
       config = %Config{}
-      assert %Game{max_robots: 4, countdown: 3, winning_score: 25, config: ^config} = Game.new()
+
+      assert %Game{num_robots: 2..10, countdown: 3, winning_score: 25, config: ^config} =
+               Game.new()
     end
   end
 
@@ -50,7 +52,7 @@ defmodule RobotRace.GameTest do
     end
 
     test "does not add robot while game has max robots", %{bender: bender} do
-      assert {:error, :max_robots} = Game.new(%Config{max_robots: 0}) |> Game.join(bender)
+      assert {:error, :max_robots} = Game.new(%Config{num_robots: ..}) |> Game.join(bender)
     end
   end
 
