@@ -20,8 +20,8 @@ jobs:
     - name: Set up Elixir
       uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
       with:
-        elixir-version: '1.13.4' # Define the elixir version [required]
-        otp-version: '24.1.3' # Define the OTP version [required]
+        elixir-version: '1.14.0'
+        otp-version: '25.0.4'
     - name: Restore dependencies cache
       uses: actions/cache@v3
       with:
@@ -30,11 +30,13 @@ jobs:
         restore-keys: ${{ runner.os }}-mix-
     - name: Install dependencies
       run: mix deps.get
-    - name: Run format
+    - name: Check for compilation warnings
+      run: mix compile --warnings-as-errors
+    - name: Check code is formatted
       run: mix format --check-formatted
-    - name: Run tests
+    - name: Check tests pass
       run: mix test
-    - name: Run credo
+    - name: Check credo passes
       run: mix credo
-    - name: Run dialyzer
+    - name: Check dialyzer passes
       run: mix dialyzer

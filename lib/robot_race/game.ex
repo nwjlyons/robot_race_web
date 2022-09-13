@@ -15,7 +15,8 @@ defmodule RobotRace.Game do
     :max_robots,
     :countdown,
     :config,
-    robots: OrderedMap.new(),
+    robots: %{},
+    robots_order: [],
     state: :setup
   ]
 
@@ -25,7 +26,8 @@ defmodule RobotRace.Game do
           max_robots: pos_integer(),
           countdown: pos_integer(),
           config: Config.t(),
-          robots: OrderedMap.t(),
+          robots: %{Id.t() => Robot.t()},
+          robots_order: list(Id.t()),
           state: state()
         }
   @type state() :: :setup | :counting_down | :playing | :finished
@@ -53,13 +55,18 @@ defmodule RobotRace.Game do
     {:error, :game_in_progress}
   end
 
-  def join(%__MODULE__{robots: %{size: size}, max_robots: max_robots}, %Robot{})
-      when size >= max_robots do
+  def join(%__MODULE__{robots: %{} = robots, max_robots: max_robots}, %Robot{})
+      when map_size(robots) >= max_robots do
     {:error, :max_robots}
   end
 
   def join(%__MODULE__{} = game, %Robot{} = robot) do
-    {:ok, %__MODULE__{game | robots: OrderedMap.put(game.robots, robot.id, robot)}}
+    {:ok,
+     %__MODULE__{
+       game
+       | robots: Map.put(game.robots, robot.id, robot),
+         robots_order: game.robots_order ++ [robot.id]
+     }}
   end
 
   @doc """
@@ -67,9 +74,9 @@ defmodule RobotRace.Game do
   """
   @spec score_point(t(), Id.t()) :: t()
   def score_point(%__MODULE__{state: :playing} = game, robot_id) when Id.is_id(robot_id) do
-    {:ok, robot} = OrderedMap.fetch(game.robots, robot_id)
+    robot = Map.fetch!(game.robots, robot_id)
     robot = %Robot{robot | score: robot.score + 1}
-    game = %__MODULE__{game | robots: OrderedMap.put(game.robots, robot.id, robot)}
+    game = %__MODULE__{game | robots: Map.replace!(game.robots, robot.id, robot)}
 
     if robot.score >= game.winning_score do
       %__MODULE__{game | state: :finished}
@@ -81,11 +88,11 @@ defmodule RobotRace.Game do
   def score_point(%__MODULE__{} = game, robot_id) when Id.is_id(robot_id), do: game
 
   @doc """
-  List robots in insertion order.
+  List robots by insertion order.
   """
   @spec robots(t()) :: list(Robot.t())
   def robots(%__MODULE__{} = game) do
-    OrderedMap.values(game.robots)
+    Enum.map(game.robots_order, &Map.fetch!(game.robots, &1))
   end
 
   @doc """
@@ -93,7 +100,7 @@ defmodule RobotRace.Game do
   """
   @spec admin?(t(), Id.t()) :: boolean()
   def admin?(%__MODULE__{} = game, robot_id) when Id.is_id(robot_id) do
-    {:ok, robot} = OrderedMap.fetch(game.robots, robot_id)
+    robot = Map.fetch!(game.robots, robot_id)
     robot.role == :admin
   end
 
@@ -125,7 +132,7 @@ defmodule RobotRace.Game do
   @spec score_board(t()) :: list(Robot.t())
   def score_board(%__MODULE__{robots: robots}) do
     robots
-    |> OrderedMap.values()
+    |> Map.values()
     |> Enum.sort_by(fn %Robot{score: score} -> score end, :desc)
   end
 
@@ -154,9 +161,11 @@ defmodule RobotRace.Game do
     }
   end
 
-  defp reset_robot_scores(%OrderedMap{} = robots) do
-    Enum.reduce(OrderedMap.values(robots), OrderedMap.new(), fn robot, robots ->
-      OrderedMap.put(robots, robot.id, %Robot{robot | score: 0})
+  defp reset_robot_scores(%{} = robots) do
+    robots
+    |> Enum.map(fn {robot_id, %Robot{} = robot} ->
+      {robot_id, %Robot{robot | score: 0}}
     end)
+    |> Enum.into(%{})
   end
 end
