@@ -23,7 +23,7 @@ defmodule RobotRace.Game do
   @type t() :: %__MODULE__{
           id: Id.t(),
           winning_score: pos_integer(),
-          num_robots: pos_integer(),
+          num_robots: Range.t(pos_integer(), pos_integer()),
           countdown: pos_integer(),
           config: Config.t(),
           robots: %{Id.t() => Robot.t()},
