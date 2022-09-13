@@ -27,6 +27,8 @@ robot_race_web-*.tar
 
 /priv/static/assets/
 
+/priv/static/doc/
+
 .elixir_ls
 
 /.idea/

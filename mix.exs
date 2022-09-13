@@ -10,7 +10,11 @@ defmodule RobotRaceWeb.MixProject do
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      aliases: aliases()
+      aliases: aliases(),
+      docs: [
+        formatters: ["html"],
+        output: "priv/static/doc"
+      ]
     ]
   end
 
