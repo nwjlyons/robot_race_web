@@ -40,6 +40,7 @@ defmodule RobotRaceWeb do
       import RobotRaceWeb.ErrorHelpers
 
       use Phoenix.HTML
+
       use Phoenix.VerifiedRoutes,
         endpoint: RobotRaceWeb.Endpoint,
         router: RobotRaceWeb.Router,

@@ -34,7 +34,8 @@ defmodule RobotRaceWeb.MixProject do
   defp deps do
     [
       {:phoenix, github: "phoenixframework/phoenix", ref: "e8a12ce", override: true},
-      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view", ref: "e1508d4", override: true},
+      {:phoenix_live_view,
+       github: "phoenixframework/phoenix_live_view", ref: "e1508d4", override: true},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
       {:phoenix_pubsub, "~> 2.0"},
       {:esbuild, "~> 0.1", runtime: Mix.env() == :dev},

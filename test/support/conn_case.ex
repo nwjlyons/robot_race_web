@@ -6,10 +6,12 @@ defmodule RobotRaceWeb.ConnCase do
     quote do
       import Plug.Conn
       import Phoenix.ConnTest
+
       use Phoenix.VerifiedRoutes,
         endpoint: RobotRaceWeb.Endpoint,
         router: RobotRaceWeb.Router,
         statics: RobotRaceWeb.static_paths()
+
       @endpoint RobotRaceWeb.Endpoint
     end
   end

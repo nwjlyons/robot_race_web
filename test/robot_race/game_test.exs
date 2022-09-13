@@ -31,7 +31,9 @@ defmodule RobotRace.GameTest do
 
     test "defaults" do
       config = %Config{}
-      assert %Game{num_robots: 2..10, countdown: 3, winning_score: 25, config: ^config} = Game.new()
+
+      assert %Game{num_robots: 2..10, countdown: 3, winning_score: 25, config: ^config} =
+               Game.new()
     end
   end
 
