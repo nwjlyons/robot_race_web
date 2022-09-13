@@ -19,7 +19,8 @@ defmodule RobotRaceWeb.LobbyLive do
        game_id: game_id,
        joining?: !!game_id,
        form_action: form_action(game_id),
-       trigger_action: false
+       trigger_action: false,
+       config: %RobotRace.Config{},
      )}
   end
 
@@ -36,7 +37,7 @@ defmodule RobotRaceWeb.LobbyLive do
         </div>
         <div class="sm:mb-8">
           <div class="prose text-xs sm:text-base text-center">
-            <p>2 - 4 players</p>
+            <p><%= @config.num_robots.first %> - <%= @config.num_robots.last %> players</p>
             <p>First to the top wins!</p>
             <p>Hit spacebar or tap screen to race</p>
           </div>

@@ -8,11 +8,11 @@ defmodule RobotRace.Game do
 
   require RobotRace.Id
 
-  @enforce_keys [:id, :winning_score, :max_robots, :countdown, :config]
+  @enforce_keys [:id, :winning_score, :num_robots, :countdown, :config]
   defstruct [
     :id,
     :winning_score,
-    :max_robots,
+    :num_robots,
     :countdown,
     :config,
     robots: %{},
@@ -23,7 +23,7 @@ defmodule RobotRace.Game do
   @type t() :: %__MODULE__{
           id: Id.t(),
           winning_score: pos_integer(),
-          max_robots: pos_integer(),
+          num_robots: pos_integer(),
           countdown: pos_integer(),
           config: Config.t(),
           robots: %{Id.t() => Robot.t()},
@@ -40,7 +40,7 @@ defmodule RobotRace.Game do
     %__MODULE__{
       id: Id.new(),
       winning_score: config.winning_score,
-      max_robots: config.max_robots,
+      num_robots: config.num_robots,
       countdown: config.countdown,
       config: config
     }
@@ -55,7 +55,7 @@ defmodule RobotRace.Game do
     {:error, :game_in_progress}
   end
 
-  def join(%__MODULE__{robots: %{} = robots, max_robots: max_robots}, %Robot{})
+  def join(%__MODULE__{robots: %{} = robots, num_robots: %Range{last: max_robots}}, %Robot{})
       when map_size(robots) >= max_robots do
     {:error, :max_robots}
   end
@@ -154,7 +154,7 @@ defmodule RobotRace.Game do
     %__MODULE__{
       game
       | winning_score: game.config.winning_score,
-        max_robots: game.config.max_robots,
+        num_robots: game.config.num_robots,
         countdown: game.config.countdown,
         robots: reset_robot_scores(game.robots),
         state: :setup
