@@ -19,7 +19,7 @@ defmodule RobotRaceWeb.GameLive do
        game: game,
        robot_id: robot_id,
        admin?: Game.admin?(game, robot_id),
-       game_url: Routes.game_url(socket, :show, game.id)
+       game_url: url(~p"/#{game.id}")
      )}
   end
 
@@ -127,7 +127,7 @@ defmodule RobotRaceWeb.GameLive do
 
   def handle_info(%{topic: "game:" <> game_id, event: "timeout"}, socket) do
     if socket.assigns.game.id == game_id do
-      {:noreply, redirect(socket, to: Routes.lobby_path(socket, :create))}
+      {:noreply, redirect(socket, to: ~p"/")}
     else
       {:noreply, socket}
     end

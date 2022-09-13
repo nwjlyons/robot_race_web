@@ -28,12 +28,12 @@ defmodule RobotRaceWeb.GameController do
           )
 
         %Plug.Conn{} = conn ->
-          redirect(conn, to: Routes.lobby_path(conn, :join, id))
+          redirect(conn, to: ~p"/#{id}/join")
       end
     else
       conn
       |> put_flash(:info, "game not found")
-      |> redirect(to: Routes.lobby_path(conn, :create))
+      |> redirect(to: ~p"/")
     end
   end
 
@@ -65,7 +65,7 @@ defmodule RobotRaceWeb.GameController do
 
   @spec redirect_to_game(Plug.Conn.t(), Game.t(), Robot.t()) :: Plug.Conn.t()
   defp redirect_to_game(%Plug.Conn{} = conn, %Game{} = game, %Robot{} = robot) do
-    game_path = Routes.game_path(conn, :show, game.id)
+    game_path = ~p"/#{game.id}"
 
     conn
     |> put_resp_cookie(@cookie_name, robot.id,

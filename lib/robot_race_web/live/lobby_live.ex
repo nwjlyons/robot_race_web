@@ -98,8 +98,8 @@ defmodule RobotRaceWeb.LobbyLive do
   def handle_event(_event, _params, socket), do: {:noreply, socket}
 
   defp form_action(nil),
-    do: Routes.game_path(RobotRaceWeb.Endpoint, :create)
+    do: ~p"/"
 
   defp form_action(id),
-    do: Routes.game_path(RobotRaceWeb.Endpoint, :join, id)
+    do: ~p"/#{id}"
 end

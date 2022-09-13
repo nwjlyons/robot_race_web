@@ -1,7 +1,7 @@
 defmodule RobotRaceWeb.Router do
   @moduledoc false
 
-  use Phoenix.Router
+  use Phoenix.Router, helpers: false
 
   import Phoenix.LiveView.Router
 
