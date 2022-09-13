@@ -6,24 +6,24 @@ defmodule RobotRaceWeb.IntegrationTest do
     conn_bender =
       post(
         conn,
-        "/",
+        ~p"/",
         %{"join_game_form" => %{"name" => "Bender"}}
       )
 
     game_id = conn_bender.assigns.game_id
     assert GameServer.exists?(conn_bender.assigns.game_id)
-    assert redirected_to(conn_bender) =~ "/#{game_id}"
+    assert redirected_to(conn_bender) =~ ~p"/#{game_id}"
 
     _conn_r2d2 =
       get(
         conn,
-        "/#{game_id}/join",
+        ~p"/#{game_id}/join",
         %{"join_game_form" => %{"name" => "Bender"}}
       )
 
     game_id = conn_bender.assigns.game_id
     assert GameServer.exists?(conn_bender.assigns.game_id)
-    assert redirected_to(conn_bender) =~ "/#{game_id}"
+    assert redirected_to(conn_bender) =~ ~p"/#{game_id}"
   end
 
   #  test "create game"
