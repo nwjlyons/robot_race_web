@@ -20,12 +20,14 @@ defmodule RobotRaceWeb.Components do
   @doc """
   Button component.
   """
-  attr :rest, :global
+  attr :text, :string, doc: "Button text"
+
+  slot :inner_block, required: true, doc: "Inner HTML. Takes precedence over button text."
 
   def button(assigns) do
     ~H"""
-    <button class="retro-button sm:p-4 sm:text-base" {@rest}>
-      <%= render_slot(@inner_block) %>
+    <button class="retro-button sm:p-4 sm:text-base">
+      <%= render_slot(@inner_block) || @text %>
     </button>
     """
   end
