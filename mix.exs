@@ -43,7 +43,7 @@ defmodule RobotRaceWeb.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:ecto, "~> 3.7"},
       {:phoenix_ecto, "~> 4.4"},
-      {:ex_doc, "~> 0.24", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.24", runtime: false},
       {:uuid, "~> 1.1"},
       {:optimal, "~> 0.3.6"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},

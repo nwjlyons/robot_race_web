@@ -28,6 +28,8 @@ COPY config config
 RUN mix deps.get --only prod && \
     mix deps.compile
 
+RUN mix docs
+
 # install npm dependencies
 #COPY assets/package.json assets/package-lock.json ./assets/
 #RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
@@ -56,7 +58,7 @@ RUN mix do compile, release
 ###
 
 # prepare release docker image
-FROM alpine:3.13.3 AS app
+FROM hexpm/elixir:1.14.0-erlang-25.0.4-alpine-3.16.1 AS app
 RUN apk add --no-cache libstdc++ openssl ncurses-libs
 
 WORKDIR /app
