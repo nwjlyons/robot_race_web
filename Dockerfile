@@ -4,7 +4,7 @@
 FROM hexpm/elixir:1.14.0-erlang-25.0.4-alpine-3.16.1 AS build
 
 # install build dependencies
-RUN apk add --no-cache build-base npm
+RUN apk add --no-cache build-base npm git
 
 # prepare build dir
 WORKDIR /app
