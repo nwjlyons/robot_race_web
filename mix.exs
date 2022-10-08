@@ -1,6 +1,8 @@
 defmodule RobotRaceWeb.MixProject do
   use Mix.Project
 
+  @source_url "https://github.com/nwjlyons/robot_race_web"
+
   def project do
     [
       app: :robot_race_web,
@@ -11,10 +13,7 @@ defmodule RobotRaceWeb.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases(),
-      docs: [
-        formatters: ["html"],
-        output: "priv/static/doc"
-      ]
+      docs: docs(),
     ]
   end
 
@@ -49,6 +48,43 @@ defmodule RobotRaceWeb.MixProject do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+    ]
+  end
+
+  defp docs() do
+    [
+      api_reference: false,
+      extras: [],
+      source_url: @source_url,
+      main: "RobotRace.Game",
+      formatters: ["html"],
+      output: "priv/static/doc",
+      groups_for_modules: groups_for_modules(),
+    ]
+  end
+
+  defp groups_for_modules() do
+    [
+      Structs: [
+        RobotRace.Game,
+        RobotRace.GameConfig,
+        RobotRace.Robot,
+        RobotRace.Id,
+      ],
+      Views: [
+        RobotRaceWeb.GameController,
+        RobotRaceWeb.GameLive,
+        RobotRaceWeb.LobbyLive,
+      ],
+      Forms: [
+        RobotRaceWeb.JoinGameForm,
+      ],
+      Components: [
+        RobotRaceWeb.Components,
+      ],
+      GenServers: [
+        RobotRaceWeb.GameServer,
+      ]
     ]
   end
 

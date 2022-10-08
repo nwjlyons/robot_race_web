@@ -20,7 +20,7 @@ defmodule RobotRaceWeb.LobbyLive do
        joining?: !!game_id,
        form_action: form_action(game_id),
        trigger_action: false,
-       config: %RobotRace.Config{}
+       config: %RobotRace.GameConfig{}
      )}
   end
 

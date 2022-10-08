@@ -1,4 +1,8 @@
 defmodule RobotRaceWeb.GameController do
+  @moduledoc """
+  GameController wraps GameLive. It exists mainly to read cookies, as LiveViews can't do this.
+  """
+
   use RobotRaceWeb, :controller
 
   import Phoenix.LiveView.Controller, only: [live_render: 3]
@@ -10,6 +14,9 @@ defmodule RobotRaceWeb.GameController do
   @cookie_max_age 60 * 60
   @cookie_name "robot_id"
 
+  @doc """
+  Endpoint to create game.
+  """
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(%Plug.Conn{} = conn, %{"join_game_form" => %{"name" => name}}) do
     {game, robot} = create_game(name)
@@ -17,6 +24,9 @@ defmodule RobotRaceWeb.GameController do
     redirect_to_game(conn, game, robot)
   end
 
+  @doc """
+  Endpoint to play game.
+  """
   @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def show(%Plug.Conn{} = conn, %{"id" => id}) do
     if GameServer.exists?(id) do
@@ -37,6 +47,9 @@ defmodule RobotRaceWeb.GameController do
     end
   end
 
+  @doc """
+  Endpoint to join game.
+  """
   @spec join(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def join(%Plug.Conn{} = conn, %{"id" => game_id, "join_game_form" => %{"name" => name}}) do
     %Robot{} = robot = Robot.new(name, :guest)

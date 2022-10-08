@@ -1,6 +1,6 @@
 defmodule RobotRaceWeb.GameLive do
   @moduledoc """
-  LiveView page for game where players can race to the top.
+  LiveView page to play the game.
   """
   use RobotRaceWeb, :live
 
