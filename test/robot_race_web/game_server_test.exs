@@ -1,8 +1,8 @@
 defmodule RobotRaceWeb.GameServerTest do
   use ExUnit.Case
 
-  alias RobotRace.GameConfig
   alias RobotRace.Game
+  alias RobotRace.GameConfig
   alias RobotRace.Robot
   alias RobotRaceWeb.GameServer
 

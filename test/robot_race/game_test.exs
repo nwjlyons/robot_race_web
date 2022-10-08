@@ -1,8 +1,8 @@
 defmodule RobotRace.GameTest do
   use ExUnit.Case
 
-  alias RobotRace.GameConfig
   alias RobotRace.Game
+  alias RobotRace.GameConfig
   alias RobotRace.Robot
 
   setup do
