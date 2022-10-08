@@ -1,4 +1,4 @@
-defmodule RobotRace.Config do
+defmodule RobotRace.GameConfig do
   @moduledoc """
   Configuration for game.
   """

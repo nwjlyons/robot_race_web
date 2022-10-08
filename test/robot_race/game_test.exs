@@ -1,8 +1,8 @@
 defmodule RobotRace.GameTest do
   use ExUnit.Case
 
-  alias RobotRace.Config
   alias RobotRace.Game
+  alias RobotRace.GameConfig
   alias RobotRace.Robot
 
   setup do
@@ -15,22 +15,22 @@ defmodule RobotRace.GameTest do
 
   describe "new/1" do
     test "with max robots" do
-      config = %Config{num_robots: 2..42}
+      config = %GameConfig{num_robots: 2..42}
       assert %Game{num_robots: 2..42, config: ^config} = Game.new(config)
     end
 
     test "with winning score" do
-      config = %Config{winning_score: 42}
+      config = %GameConfig{winning_score: 42}
       assert %Game{winning_score: 42, config: ^config} = Game.new(config)
     end
 
     test "with countdown" do
-      config = %Config{countdown: 42}
+      config = %GameConfig{countdown: 42}
       assert %Game{countdown: 42, config: ^config} = Game.new(config)
     end
 
     test "defaults" do
-      config = %Config{}
+      config = %GameConfig{}
 
       assert %Game{num_robots: 2..10, countdown: 3, winning_score: 25, config: ^config} =
                Game.new()
@@ -52,14 +52,14 @@ defmodule RobotRace.GameTest do
     end
 
     test "does not add robot while game has max robots", %{bender: bender} do
-      assert {:error, :max_robots} = Game.new(%Config{num_robots: ..}) |> Game.join(bender)
+      assert {:error, :max_robots} = Game.new(%GameConfig{num_robots: ..}) |> Game.join(bender)
     end
   end
 
   describe "countdown/1" do
     test "counts down and transitions to playing" do
       countdown = 5
-      game = Game.new(%Config{countdown: countdown})
+      game = Game.new(%GameConfig{countdown: countdown})
 
       game =
         for i <- countdown..0, reduce: %Game{} = game do
@@ -100,7 +100,7 @@ defmodule RobotRace.GameTest do
     end
 
     test "scores points and tranistions to finished", %{bender: bender} do
-      game = Game.new(%Config{winning_score: 1})
+      game = Game.new(%GameConfig{winning_score: 1})
       {:ok, game} = Game.join(game, bender)
       game = Game.play(game)
       assert %Game{state: :finished} = game = Game.score_point(game, bender.id)
@@ -132,7 +132,7 @@ defmodule RobotRace.GameTest do
 
   describe "play_again/1" do
     test "resets game back to config", %{bender: bender} do
-      game = Game.new(%Config{winning_score: 1, countdown: 2})
+      game = Game.new(%GameConfig{winning_score: 1, countdown: 2})
       {:ok, game} = Game.join(game, bender)
 
       assert %Game{countdown: 0, state: :finished} =

@@ -2,7 +2,7 @@ defmodule RobotRace.Game do
   @moduledoc """
   Game struct and functions.
   """
-  alias RobotRace.Config
+  alias RobotRace.GameConfig
   alias RobotRace.Id
   alias RobotRace.Robot
 
@@ -25,7 +25,7 @@ defmodule RobotRace.Game do
           winning_score: pos_integer(),
           num_robots: Range.t(pos_integer(), pos_integer()),
           countdown: pos_integer(),
-          config: Config.t(),
+          config: GameConfig.t(),
           robots: %{Id.t() => Robot.t()},
           robots_order: list(Id.t()),
           state: state()
@@ -35,8 +35,8 @@ defmodule RobotRace.Game do
   @doc """
   New game.
   """
-  @spec new(Config.t()) :: t()
-  def new(%Config{} = config \\ %Config{}) do
+  @spec new(GameConfig.t()) :: t()
+  def new(%GameConfig{} = config \\ %GameConfig{}) do
     %__MODULE__{
       id: Id.new(),
       winning_score: config.winning_score,
