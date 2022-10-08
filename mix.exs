@@ -13,7 +13,7 @@ defmodule RobotRaceWeb.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases(),
-      docs: docs(),
+      docs: docs()
     ]
   end
 
@@ -59,7 +59,7 @@ defmodule RobotRaceWeb.MixProject do
       main: "RobotRace.Game",
       formatters: ["html"],
       output: "priv/static/doc",
-      groups_for_modules: groups_for_modules(),
+      groups_for_modules: groups_for_modules()
     ]
   end
 
@@ -69,21 +69,21 @@ defmodule RobotRaceWeb.MixProject do
         RobotRace.Game,
         RobotRace.GameConfig,
         RobotRace.Robot,
-        RobotRace.Id,
+        RobotRace.Id
       ],
       Views: [
         RobotRaceWeb.GameController,
         RobotRaceWeb.GameLive,
-        RobotRaceWeb.LobbyLive,
+        RobotRaceWeb.LobbyLive
       ],
       Forms: [
-        RobotRaceWeb.JoinGameForm,
+        RobotRaceWeb.JoinGameForm
       ],
       Components: [
-        RobotRaceWeb.Components,
+        RobotRaceWeb.Components
       ],
       GenServers: [
-        RobotRaceWeb.GameServer,
+        RobotRaceWeb.GameServer
       ]
     ]
   end
