@@ -1,7 +1,7 @@
 defmodule RobotRaceWeb.GameServerTest do
   use ExUnit.Case
 
-  alias RobotRace.Config
+  alias RobotRace.GameConfig
   alias RobotRace.Game
   alias RobotRace.Robot
   alias RobotRaceWeb.GameServer
@@ -43,7 +43,7 @@ defmodule RobotRaceWeb.GameServerTest do
     end
 
     test "join full game", %{bender: bender, r2d2: r2d2} do
-      game = Game.new(%Config{num_robots: 1..1})
+      game = Game.new(%GameConfig{num_robots: 1..1})
       {:ok, game} = Game.join(game, bender)
       GameServer.new(game)
       assert {:error, :max_robots} = GameServer.join(game.id, r2d2)
@@ -52,7 +52,7 @@ defmodule RobotRaceWeb.GameServerTest do
 
   describe "countdown/1" do
     test "counts down to start playing" do
-      game = Game.new(%Config{countdown: 2})
+      game = Game.new(%GameConfig{countdown: 2})
       GameServer.new(game)
       GameServer.countdown(game.id)
       Process.sleep(5_000)
