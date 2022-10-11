@@ -7,8 +7,6 @@ defmodule RobotRaceWeb.GameLive do
   alias RobotRace.Game
   alias RobotRaceWeb.GameServer
 
-  require RobotRace.Id
-
   @impl Phoenix.LiveView
   def mount(_params, %{"game_id" => game_id, "robot_id" => robot_id}, socket) do
     %Game{} = game = GameServer.get(game_id)
@@ -35,17 +33,13 @@ defmodule RobotRaceWeb.GameLive do
     ~H"""
     <div class="absolute h-full w-full flex flex-col justify-center items-center z-10">
       <div class="prose">
-        <%= if @admin? do %>
-          <p class="text-center">Invite players</p>
+          <p class="text-center"><%= if(@admin?, do: "Invite players", else: "Get ready") %></p>
+          <%= if @admin? do %>
           <.button id="copy-share-link" data-copy-link={@game_url} phx-hook="CopyLink">
             Copy invite link
           </.button>
-        <% else %>
-          <p class="text-center">Get ready</p>
-        <% end %>
-        <%= if @admin? do %>
           <.button phx-click="countdown">Start countdown</.button>
-        <% end %>
+          <% end %>
       </div>
     </div>
     """
@@ -68,11 +62,9 @@ defmodule RobotRaceWeb.GameLive do
         <%= Game.winner(@game).name %> wins!
       </h1>
 
-      <%= if @admin? do %>
-        <div class="prose">
-          <button class="retro-button sm:p-4 sm:text-base" phx-click="play_again">Play again</button>
-        </div>
-      <% end %>
+      <div :if={@admin?} class="prose">
+        <button class="retro-button sm:p-4 sm:text-base" phx-click="play_again">Play again</button>
+      </div>
     </div>
     """
   end
