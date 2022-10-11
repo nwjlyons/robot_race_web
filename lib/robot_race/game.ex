@@ -7,6 +7,7 @@ defmodule RobotRace.Game do
   alias RobotRace.GameConfig
   alias RobotRace.GameId
   alias RobotRace.Robot
+  alias RobotRace.RobotId
 
   @enforce_keys [:id, :winning_score, :num_robots, :countdown, :config]
   defstruct [
