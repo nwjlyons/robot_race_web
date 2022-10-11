@@ -1,7 +1,5 @@
 defmodule RobotRace.Id do
-  @moduledoc """
-  Identifier.
-  """
+  @moduledoc false
   @type t() :: String.t()
 
   @size 10

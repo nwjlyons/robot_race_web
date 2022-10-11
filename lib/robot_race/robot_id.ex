@@ -1,6 +1,6 @@
 defmodule RobotRace.RobotId do
   @moduledoc """
-  Robot identifier.
+  Robot ID.
   """
 
   @prefix "r_"
@@ -9,14 +9,14 @@ defmodule RobotRace.RobotId do
   @type t() :: String.t()
 
   @doc """
-  Generate new identifier
+  Generate new robot ID.
   """
   @spec new() :: t()
   def new(), do: @prefix <> RobotRace.Id.new()
 
   defmacro robot_id() do
     quote do
-      unquote(@prefix) <> robot_id
+      unquote(@prefix) <> _robot_id
     end
   end
 end

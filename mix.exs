@@ -68,7 +68,9 @@ defmodule RobotRaceWeb.MixProject do
         RobotRace.Game,
         RobotRace.GameConfig,
         RobotRace.Robot,
-        RobotRace.Id
+        RobotRace.Id,
+        RobotRace.GameId,
+        RobotRace.RobotId,
       ],
       Views: [
         RobotRaceWeb.GameController,

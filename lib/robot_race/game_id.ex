@@ -1,6 +1,6 @@
 defmodule RobotRace.GameId do
   @moduledoc """
-  Game identifier.
+  Game ID.
   """
 
   @prefix "g_"
@@ -9,7 +9,7 @@ defmodule RobotRace.GameId do
   @type t() :: String.t()
 
   @doc """
-  Generate new identifier
+  Generate new game ID.
   """
   @spec new() :: t()
   def new(), do: @prefix <> RobotRace.Id.new()
