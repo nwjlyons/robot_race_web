@@ -43,8 +43,7 @@ defmodule RobotRaceWeb.MixProject do
       {:ecto, "~> 3.7"},
       {:phoenix_ecto, "~> 4.4"},
       {:ex_doc, "~> 0.24", runtime: false},
-      {:uuid, "~> 1.1"},
-      {:optimal, "~> 0.3.6"},
+      {:nanoid, "~> 2.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
@@ -69,7 +68,9 @@ defmodule RobotRaceWeb.MixProject do
         RobotRace.Game,
         RobotRace.GameConfig,
         RobotRace.Robot,
-        RobotRace.Id
+        RobotRace.Id,
+        RobotRace.GameId,
+        RobotRace.RobotId
       ],
       Views: [
         RobotRaceWeb.GameController,

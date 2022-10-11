@@ -4,12 +4,15 @@ defmodule RobotRaceWeb.GameServer do
   """
   use GenServer, restart: :transient
 
+  import RobotRace.GameId
+  import RobotRace.RobotId
+
   alias RobotRace.Game
-  alias RobotRace.Id
+  alias RobotRace.GameId
   alias RobotRace.Robot
+  alias RobotRace.RobotId
 
   require Logger
-  require RobotRace.Id
 
   @timeout_in_ms :timer.minutes(10)
 
@@ -33,8 +36,8 @@ defmodule RobotRaceWeb.GameServer do
   @doc """
   Does game exist.
   """
-  @spec exists?(Id.t()) :: boolean()
-  def exists?(game_id) when Id.is_id(game_id) do
+  @spec exists?(GameId.t()) :: boolean()
+  def exists?(game_id() = game_id) do
     case GenServer.whereis(via_tuple(game_id)) do
       pid when is_pid(pid) -> true
       nil -> false
@@ -44,41 +47,41 @@ defmodule RobotRaceWeb.GameServer do
   @doc """
   Get game.
   """
-  @spec get(Id.t()) :: Game.t()
-  def get(game_id) when Id.is_id(game_id) do
+  @spec get(GameId.t()) :: Game.t()
+  def get(game_id() = game_id) do
     GenServer.call(via_tuple(game_id), :get)
   end
 
   @doc """
   Join game.
   """
-  @spec join(Id.t(), Robot.t()) ::
+  @spec join(GameId.t(), Robot.t()) ::
           {:ok, Game.t()} | {:error, :game_in_progress} | {:error, :max_robots}
-  def join(game_id, %Robot{} = robot) when Id.is_id(game_id) do
+  def join(game_id() = game_id, %Robot{} = robot) do
     GenServer.call(via_tuple(game_id), {:join, robot})
   end
 
   @doc """
   Countdown to start.
   """
-  @spec countdown(Id.t()) :: Game.t()
-  def countdown(game_id) when Id.is_id(game_id) do
+  @spec countdown(GameId.t()) :: Game.t()
+  def countdown(game_id() = game_id) do
     GenServer.call(via_tuple(game_id), :countdown)
   end
 
   @doc """
   Score point.
   """
-  @spec score_point(Id.t(), Id.t()) :: Game.t()
-  def score_point(game_id, robot_id) when Id.is_id(game_id) and Id.is_id(robot_id) do
+  @spec score_point(GameId.t(), RobotId.t()) :: Game.t()
+  def score_point(game_id() = game_id, robot_id() = robot_id) do
     GenServer.call(via_tuple(game_id), {:score_point, robot_id})
   end
 
   @doc """
   Reset game, ready to play again.
   """
-  @spec play_again(Id.t()) :: Game.t()
-  def play_again(game_id) when Id.is_id(game_id) do
+  @spec play_again(GameId.t()) :: Game.t()
+  def play_again(game_id() = game_id) do
     GenServer.call(via_tuple(game_id), :play_again)
   end
 
@@ -157,7 +160,7 @@ defmodule RobotRaceWeb.GameServer do
     RobotRaceWeb.Endpoint.broadcast("game:" <> game.id, "update", %{game: game})
   end
 
-  defp via_tuple(game_id) when Id.is_id(game_id) do
+  defp via_tuple(game_id) do
     {:global, game_id}
   end
 
