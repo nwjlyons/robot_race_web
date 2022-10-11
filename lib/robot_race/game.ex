@@ -3,10 +3,10 @@ defmodule RobotRace.Game do
   Game struct and functions.
   """
   alias RobotRace.GameConfig
-  alias RobotRace.Id
+  alias RobotRace.GameId
   alias RobotRace.Robot
 
-  require RobotRace.Id
+  import RobotRace.RobotId
 
   @enforce_keys [:id, :winning_score, :num_robots, :countdown, :config]
   defstruct [
@@ -21,13 +21,13 @@ defmodule RobotRace.Game do
   ]
 
   @type t() :: %__MODULE__{
-          id: Id.t(),
+          id: GameId.t(),
           winning_score: pos_integer(),
           num_robots: Range.t(pos_integer(), pos_integer()),
           countdown: pos_integer(),
           config: GameConfig.t(),
-          robots: %{Id.t() => Robot.t()},
-          robots_order: list(Id.t()),
+          robots: %{RobotId.t() => Robot.t()},
+          robots_order: list(RobotId.t()),
           state: state()
         }
   @type state() :: :setup | :counting_down | :playing | :finished
@@ -38,7 +38,7 @@ defmodule RobotRace.Game do
   @spec new(GameConfig.t()) :: t()
   def new(%GameConfig{} = config \\ %GameConfig{}) do
     %__MODULE__{
-      id: Id.new(),
+      id: GameId.new(),
       winning_score: config.winning_score,
       num_robots: config.num_robots,
       countdown: config.countdown,
@@ -72,8 +72,8 @@ defmodule RobotRace.Game do
   @doc """
   Score a point.
   """
-  @spec score_point(t(), Id.t()) :: t()
-  def score_point(%__MODULE__{state: :playing} = game, robot_id) when Id.is_id(robot_id) do
+  @spec score_point(t(), RobotId.t()) :: t()
+  def score_point(%__MODULE__{state: :playing} = game, robot_id() = robot_id) do
     robot = Map.fetch!(game.robots, robot_id)
     robot = %Robot{robot | score: robot.score + 1}
     game = %__MODULE__{game | robots: Map.replace!(game.robots, robot.id, robot)}
@@ -85,7 +85,7 @@ defmodule RobotRace.Game do
     end
   end
 
-  def score_point(%__MODULE__{} = game, robot_id) when Id.is_id(robot_id), do: game
+  def score_point(%__MODULE__{} = game, robot_id() = _robot_id), do: game
 
   @doc """
   List robots by insertion order.
@@ -98,8 +98,8 @@ defmodule RobotRace.Game do
   @doc """
   Is Robot an admin.
   """
-  @spec admin?(t(), Id.t()) :: boolean()
-  def admin?(%__MODULE__{} = game, robot_id) when Id.is_id(robot_id) do
+  @spec admin?(t(), RobotId.t()) :: boolean()
+  def admin?(%__MODULE__{} = game, robot_id() = robot_id) do
     robot = Map.fetch!(game.robots, robot_id)
     robot.role == :admin
   end

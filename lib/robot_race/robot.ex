@@ -3,7 +3,7 @@ defmodule RobotRace.Robot do
   Robot.
   """
 
-  alias RobotRace.Id
+  alias RobotRace.RobotId
 
   @roles [:guest, :admin]
 
@@ -11,7 +11,7 @@ defmodule RobotRace.Robot do
   defstruct id: nil, name: "", role: :guest, score: 0
 
   @type t() :: %__MODULE__{
-          id: Id.t(),
+          id: RobotId.t(),
           name: String.t(),
           role: role(),
           score: non_neg_integer()
@@ -26,6 +26,6 @@ defmodule RobotRace.Robot do
   """
   @spec new(String.t(), role()) :: t()
   def new(name, role) when is_binary(name) and is_role(role) do
-    %__MODULE__{id: Id.new(), name: name, role: role}
+    %__MODULE__{id: RobotId.new(), name: name, role: role}
   end
 end
