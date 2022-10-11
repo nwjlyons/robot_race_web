@@ -4,16 +4,15 @@ defmodule RobotRaceWeb.GameServer do
   """
   use GenServer, restart: :transient
 
+  import RobotRace.GameId
+  import RobotRace.RobotId
+
   alias RobotRace.Game
+  alias RobotRace.GameId
   alias RobotRace.Robot
   alias RobotRace.RobotId
-  alias RobotRace.GameId
-
-  import RobotRace.RobotId
-  import RobotRace.GameId
 
   require Logger
-
 
   @timeout_in_ms :timer.minutes(10)
 

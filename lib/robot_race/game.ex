@@ -2,11 +2,11 @@ defmodule RobotRace.Game do
   @moduledoc """
   Game struct and functions.
   """
+  import RobotRace.RobotId
+
   alias RobotRace.GameConfig
   alias RobotRace.GameId
   alias RobotRace.Robot
-
-  import RobotRace.RobotId
 
   @enforce_keys [:id, :winning_score, :num_robots, :countdown, :config]
   defstruct [
