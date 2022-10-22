@@ -44,6 +44,8 @@ defmodule RobotRaceWeb.GameServer do
     end
   end
 
+  def exists?(_game_id), do: false
+
   @doc """
   Get game.
   """
