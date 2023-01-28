@@ -30,6 +30,7 @@ defmodule RobotRaceWeb.GameServer do
   # Client
   @impl GenServer
   def init(%Game{} = game) do
+    Process.flag(:trap_exit, true)
     ok(game)
   end
 
@@ -149,9 +150,13 @@ defmodule RobotRaceWeb.GameServer do
     {:stop, :normal, state}
   end
 
+  def handle_info({:EXIT, _pid, reason}, state) do
+    {:stop, reason, state}
+  end
+
   @impl GenServer
   def terminate(:normal, %Game{} = game) do
-    RobotRaceWeb.Endpoint.broadcast("game:" <> game.id, "timeout", nil)
+    RobotRaceWeb.Endpoint.broadcast("game:" <> game.id, "terminate", nil)
   end
 
   def subscribe(%Game{} = game) do

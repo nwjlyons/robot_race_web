@@ -117,9 +117,9 @@ defmodule RobotRaceWeb.GameLive do
     end
   end
 
-  def handle_info(%{topic: "game:" <> game_id, event: "timeout"}, socket) do
+  def handle_info(%{topic: "game:" <> game_id, event: "terminate"}, socket) do
     if socket.assigns.game.id == game_id do
-      {:noreply, redirect(socket, to: ~p"/")}
+      {:noreply, socket |> put_flash(:error, "terminated") |> redirect(to: ~p"/")}
     else
       {:noreply, socket}
     end
