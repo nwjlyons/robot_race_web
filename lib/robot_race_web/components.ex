@@ -11,7 +11,7 @@ defmodule RobotRaceWeb.Components do
 
   def alert(assigns) do
     ~H"""
-    <div class="text-red font-mono flex flex-col items-center w-full p-4 z-10">
+    <div class="text-red font-mono flex flex-col items-center w-full p-4 z-10 h-fit">
       <%= @msg %>
     </div>
     """
