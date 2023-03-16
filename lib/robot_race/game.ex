@@ -1,6 +1,7 @@
 defmodule RobotRace.Game do
   @moduledoc """
-  Game struct and functions.
+  This module defines the Game struct and its associated functions, which are used to manage
+  a robot race game, including the game state, participating robots, and their scores.
   """
   import RobotRace.RobotId
 
@@ -36,7 +37,9 @@ defmodule RobotRace.Game do
   @type join_game_error() :: :game_in_progress | :max_robots
 
   @doc """
-  New game.
+  Create a new game instance with the specified configuration or a default configuration.
+
+  Returns a new game struct.
   """
   @spec new(GameConfig.t()) :: t()
   def new(%GameConfig{} = config \\ %GameConfig{}) do
@@ -50,7 +53,10 @@ defmodule RobotRace.Game do
   end
 
   @doc """
-  Join game.
+  Join a game with the specified robot.
+
+  Returns an updated game struct if the robot is able to join, or an error if the game is
+  in progress or the maximum number of robots has been reached.
   """
   @spec join(t(), Robot.t()) :: {:ok, t()} | {:error, join_game_error()}
   def join(%__MODULE__{state: state}, %Robot{})
@@ -73,7 +79,10 @@ defmodule RobotRace.Game do
   end
 
   @doc """
-  Score a point.
+  Score a point for the specified robot.
+
+  Returns an updated game struct with the robot's score incremented. If the robot's score
+  reaches the winning score, the game state is set to `:finished`.
   """
   @spec score_point(t(), RobotId.t()) :: t()
   def score_point(%__MODULE__{state: :playing} = game, robot_id() = robot_id) do
@@ -91,7 +100,9 @@ defmodule RobotRace.Game do
   def score_point(%__MODULE__{} = game, robot_id() = _robot_id), do: game
 
   @doc """
-  List robots by insertion order.
+  List all robots in the game in the order they joined.
+
+  Returns a list of robot structs.
   """
   @spec robots(t()) :: list(Robot.t())
   def robots(%__MODULE__{} = game) do
@@ -99,7 +110,9 @@ defmodule RobotRace.Game do
   end
 
   @doc """
-  Is Robot an admin.
+  Check if a robot with the specified ID is an admin.
+
+  Returns true if the robot is an admin, false otherwise.
   """
   @spec admin?(t(), RobotId.t()) :: boolean()
   def admin?(%__MODULE__{} = game, robot_id() = robot_id) do
@@ -108,7 +121,9 @@ defmodule RobotRace.Game do
   end
 
   @doc """
-  Play game.
+  Set the game state to `:playing`, allowing robots to score points.
+
+  Returns an updated game struct.
   """
   @spec play(t()) :: t()
   def play(%__MODULE__{} = game), do: %__MODULE__{game | state: :playing}
