@@ -8,7 +8,7 @@ defmodule RobotRaceWeb.LobbyLive do
   alias RobotRaceWeb.JoinGameForm
 
   @impl Phoenix.LiveView
-  def mount(%{} = params, %{} = _session, %Phoenix.LiveView.Socket{} = socket) do
+  def mount(%{} = params, %{} = _session, %Socket{} = socket) do
     game_id = Map.get(params, "id")
     form = %JoinGameForm{}
 
@@ -71,12 +71,12 @@ defmodule RobotRaceWeb.LobbyLive do
   end
 
   @impl Phoenix.LiveView
-  def handle_event("validate", %{"join_game_form" => form_params}, socket) do
+  def handle_event("validate", %{"join_game_form" => form_params}, %Socket{} = socket) do
     changeset = JoinGameForm.validate(socket.assigns.form, form_params)
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def handle_event("submit", %{"join_game_form" => form_params}, socket) do
+  def handle_event("submit", %{"join_game_form" => form_params}, %Socket{} = socket) do
     case JoinGameForm.submit(socket.assigns.form, form_params) do
       {:ok, %JoinGameForm{} = _form} ->
         {:noreply, assign(socket, trigger_action: true)}
@@ -86,7 +86,7 @@ defmodule RobotRaceWeb.LobbyLive do
     end
   end
 
-  def handle_event("race_track_mounted", _params, socket) do
+  def handle_event("race_track_mounted", %{} = _params, %Socket{} = socket) do
     {
       :noreply,
       push_event(socket, "game_updated", %{
@@ -96,7 +96,7 @@ defmodule RobotRaceWeb.LobbyLive do
     }
   end
 
-  def handle_event(_event, _params, socket), do: {:noreply, socket}
+  def handle_event(_event, %{} = _params, %Socket{} = socket), do: {:noreply, socket}
 
   defp form_action(nil),
     do: ~p"/"
