@@ -46,7 +46,9 @@ defmodule RobotRaceWeb.MixProject do
       {:nanoid, "~> 2.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:typed_ecto_schema, "~> 0.4.1", runtime: false},
+      {:typed_struct, "~> 0.3.0"}
     ]
   end
 

@@ -2,22 +2,22 @@ defmodule RobotRace.Robot do
   @moduledoc """
   Robot.
   """
+  use TypedStruct
 
   alias RobotRace.RobotId
 
-  @roles [:guest, :admin]
-
   @derive {Jason.Encoder, only: [:name, :score]}
-  defstruct id: nil, name: "", role: :guest, score: 0
 
-  @type t() :: %__MODULE__{
-          id: RobotId.t(),
-          name: String.t(),
-          role: role(),
-          score: non_neg_integer()
-        }
+  typedstruct do
+    field :id, RobotId.t()
+    field :name, String.t()
+    field :role, role(), default: :guest
+    field :score, non_neg_integer(), default: 0
+  end
 
   @type role() :: :guest | :admin
+
+  @roles [:guest, :admin]
 
   defguard is_role(role) when role in @roles
 
