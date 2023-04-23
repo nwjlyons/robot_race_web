@@ -17,6 +17,7 @@ defmodule RobotRaceWeb.Router do
   scope "/" do
     pipe_through :browser
 
+    live "/_stats", RobotRaceWeb.StatsLive, :stats, container: {:div, class: "h-full flex"}
     live "/:id/join", RobotRaceWeb.LobbyLive, :join, container: {:div, class: "h-full flex"}
     get "/:id", RobotRaceWeb.GameController, :show
     post "/:id", RobotRaceWeb.GameController, :join
