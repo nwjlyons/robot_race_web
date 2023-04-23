@@ -1,9 +1,13 @@
 defmodule RobotRaceWeb.StatsServer do
+  @moduledoc """
+  GenServer to hold stats in memory.
+  """
+
   use GenServer
 
   alias RobotRace.Stats
 
-  def start_link(_) do
+  def start_link(_opts) do
     GenServer.start_link(__MODULE__, %Stats{}, name: StatsServer)
   end
 
@@ -25,10 +29,21 @@ defmodule RobotRaceWeb.StatsServer do
   @impl GenServer
   def handle_call(:increment_num_games, _from, %Stats{} = stats) do
     stats = %Stats{stats | num_games: stats.num_games + 1}
+    broadcast(stats)
     {:reply, stats, stats}
   end
 
   def handle_call(:get, _from, %Stats{} = stats) do
     {:reply, stats, stats}
+  end
+
+  @event "stats"
+
+  def subscribe() do
+    Phoenix.PubSub.subscribe(RobotRaceWeb.PubSub, @event)
+  end
+
+  defp broadcast(%Stats{} = stats) do
+    RobotRaceWeb.Endpoint.broadcast(@event, "update", %{stats: stats})
   end
 end

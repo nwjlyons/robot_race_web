@@ -1,4 +1,8 @@
 defmodule RobotRace.Stats do
+  @moduledoc """
+  Struct to hold stats about games.
+  """
+
   use TypedStruct
 
   typedstruct do
