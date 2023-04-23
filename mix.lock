@@ -21,7 +21,6 @@
   "mime": {:hex, :mime, "2.0.2", "0b9e1a4c840eafb68d820b0e2158ef5c49385d17fb36855ac6e7e087d4b1dcc5", [:mix], [], "hexpm", "e6a3f76b4c277739e36c2e21a2c640778ba4c3846189d5ab19f97f126df5f9b7"},
   "nanoid": {:hex, :nanoid, "2.0.5", "1d2948d8967ef2d948a58c3fef02385040bd9823fc6394bd604b8d98e5516b22", [:mix], [], "hexpm", "956e8876321104da72aa48770539ff26b36b744cd26753ec8e7a8a37e53d5f58"},
   "nimble_parsec": {:hex, :nimble_parsec, "1.2.3", "244836e6e3f1200c7f30cb56733fd808744eca61fd182f731eac4af635cc6d0b", [:mix], [], "hexpm", "c8d789e39b9131acf7b99291e93dae60ab48ef14a7ee9d58c6964f59efb570b0"},
-  "optimal": {:hex, :optimal, "0.3.6", "46bbf52fbbbd238cda81e02560caa84f93a53c75620f1fe19e81e4ae7b07d1dd", [:mix], [], "hexpm", "1a06ea6a653120226b35b283a1cd10039550f2c566edcdec22b29316d73640fd"},
   "phoenix": {:git, "https://github.com/phoenixframework/phoenix.git", "e8a12ce00ea91e3817e8187fbbd71c18c249238e", [ref: "e8a12ce"]},
   "phoenix_ecto": {:hex, :phoenix_ecto, "4.4.0", "0672ed4e4808b3fbed494dded89958e22fb882de47a97634c0b13e7b0b5f7720", [:mix], [{:ecto, "~> 3.3", [hex: :ecto, repo: "hexpm", optional: false]}, {:phoenix_html, "~> 2.14.2 or ~> 3.0", [hex: :phoenix_html, repo: "hexpm", optional: true]}, {:plug, "~> 1.9", [hex: :plug, repo: "hexpm", optional: false]}], "hexpm", "09864e558ed31ee00bd48fcc1d4fc58ae9678c9e81649075431e69dbabb43cc1"},
   "phoenix_html": {:hex, :phoenix_html, "3.2.0", "1c1219d4b6cb22ac72f12f73dc5fad6c7563104d083f711c3fcd8551a1f4ae11", [:mix], [{:plug, "~> 1.5", [hex: :plug, repo: "hexpm", optional: true]}], "hexpm", "36ec97ba56d25c0136ef1992c37957e4246b649d620958a1f9fa86165f8bc54f"},
@@ -34,5 +33,5 @@
   "plug_crypto": {:hex, :plug_crypto, "1.2.2", "05654514ac717ff3a1843204b424477d9e60c143406aa94daf2274fdd280794d", [:mix], [], "hexpm", "87631c7ad914a5a445f0a3809f99b079113ae4ed4b867348dd9eec288cecb6db"},
   "ranch": {:hex, :ranch, "1.8.0", "8c7a100a139fd57f17327b6413e4167ac559fbc04ca7448e9be9057311597a1d", [:make, :rebar3], [], "hexpm", "49fbcfd3682fab1f5d109351b61257676da1a2fdbe295904176d5e521a2ddfe5"},
   "telemetry": {:hex, :telemetry, "1.1.0", "a589817034a27eab11144ad24d5c0f9fab1f58173274b1e9bae7074af9cbee51", [:rebar3], [], "hexpm", "b727b2a1f75614774cff2d7565b64d0dfa5bd52ba517f16543e6fc7efcc0df48"},
-  "uuid": {:hex, :uuid, "1.1.8", "e22fc04499de0de3ed1116b770c7737779f226ceefa0badb3592e64d5cfb4eb9", [:mix], [], "hexpm", "c790593b4c3b601f5dc2378baae7efaf5b3d73c4c6456ba85759905be792f2ac"},
+  "typed_struct": {:hex, :typed_struct, "0.3.0", "939789e3c1dca39d7170c87f729127469d1315dcf99fee8e152bb774b17e7ff7", [:mix], [], "hexpm", "c50bd5c3a61fe4e198a8504f939be3d3c85903b382bde4865579bc23111d1b6d"},
 }

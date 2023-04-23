@@ -4,15 +4,13 @@ defmodule RobotRaceWeb.JoinGameForm do
   """
   use RobotRaceWeb.Forms
 
-  embedded_schema do
-    field(:name, :string, default: "")
+  typedstruct do
+    field :name, String.t(), default: ""
   end
-
-  @type t() :: %__MODULE__{name: String.t()}
 
   @spec changeset(t(), map()) :: Ecto.Changeset.t(t())
   def changeset(%__MODULE__{} = form, %{} = params) do
-    form
+    {form, %{name: :string}}
     |> cast(params, [:name])
     |> validate_required([:name])
     |> validate_length(:name, max: 5)

@@ -2,6 +2,7 @@ defmodule RobotRace.Game do
   @moduledoc """
   Game struct and functions.
   """
+  use TypedStruct
   import RobotRace.RobotId
 
   alias RobotRace.GameConfig
@@ -9,28 +10,17 @@ defmodule RobotRace.Game do
   alias RobotRace.Robot
   alias RobotRace.RobotId
 
-  @enforce_keys [:id, :winning_score, :num_robots, :countdown, :config]
-  defstruct [
-    :id,
-    :winning_score,
-    :num_robots,
-    :countdown,
-    :config,
-    robots: %{},
-    robots_order: [],
-    state: :setup
-  ]
+  typedstruct do
+    field :id, GameId.t(), enforce: true
+    field :winning_score, pos_integer(), enforce: true
+    field :num_robots, Range.t(pos_integer(), pos_integer()), enforce: true
+    field :countdown, pos_integer(), enforce: true
+    field :config, GameConfig.t(), enforce: true
+    field :robots, %{RobotId.t() => Robot.t()}, default: %{}
+    field :robots_order, list(RobotId.t()), default: []
+    field :state, state(), default: :setup
+  end
 
-  @type t() :: %__MODULE__{
-          id: GameId.t(),
-          winning_score: pos_integer(),
-          num_robots: Range.t(pos_integer(), pos_integer()),
-          countdown: pos_integer(),
-          config: GameConfig.t(),
-          robots: %{RobotId.t() => Robot.t()},
-          robots_order: list(RobotId.t()),
-          state: state()
-        }
   @type state() :: :setup | :counting_down | :playing | :finished
 
   @doc """

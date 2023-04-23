@@ -11,6 +11,7 @@ defmodule RobotRaceWeb.GameServer do
   alias RobotRace.GameId
   alias RobotRace.Robot
   alias RobotRace.RobotId
+  alias RobotRaceWeb.StatsServer
 
   require Logger
 
@@ -31,6 +32,7 @@ defmodule RobotRaceWeb.GameServer do
   @impl GenServer
   def init(%Game{} = game) do
     Process.flag(:trap_exit, true)
+    StatsServer.increment_num_games()
     ok(game)
   end
 

@@ -46,7 +46,8 @@ defmodule RobotRaceWeb.MixProject do
       {:nanoid, "~> 2.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:typed_struct, "~> 0.3.0", runtime: false}
     ]
   end
 
@@ -91,7 +92,8 @@ defmodule RobotRaceWeb.MixProject do
 
   defp aliases do
     [
-      "assets.deploy": ["esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["esbuild default --minify", "phx.digest"],
+      "deps.sync": ["deps.get", "deps.clean --unlock --unused"]
     ]
   end
 end
