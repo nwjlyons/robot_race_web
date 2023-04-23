@@ -8,7 +8,7 @@ defmodule RobotRaceWeb.StatsServer do
   alias RobotRace.Stats
 
   def start_link(_opts) do
-    GenServer.start_link(__MODULE__, %Stats{}, name: StatsServer)
+    GenServer.start_link(__MODULE__, %Stats{}, name: __MODULE__)
   end
 
   @impl GenServer
@@ -18,12 +18,12 @@ defmodule RobotRaceWeb.StatsServer do
 
   @spec get() :: Stats.t()
   def get() do
-    GenServer.call(StatsServer, :get)
+    GenServer.call(__MODULE__, :get)
   end
 
   @spec increment_num_games() :: Stats.t()
   def increment_num_games() do
-    GenServer.call(StatsServer, :increment_num_games)
+    GenServer.call(__MODULE__, :increment_num_games)
   end
 
   @impl GenServer
