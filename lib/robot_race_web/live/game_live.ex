@@ -86,7 +86,11 @@ defmodule RobotRaceWeb.GameLive do
     {:noreply, socket}
   end
 
-  def handle_event("score_point", %{"source" => "keyboard", "code" => "Space"}, %Socket{} = socket) do
+  def handle_event(
+        "score_point",
+        %{"source" => "keyboard", "code" => "Space"},
+        %Socket{} = socket
+      ) do
     GameServer.score_point(socket.assigns.game.id, socket.assigns.robot_id)
     {:noreply, socket}
   end
