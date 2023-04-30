@@ -1,10 +1,10 @@
-<%= if success = get_flash(@conn, :success) do %>
+<%= if success = Phoenix.Flash.get(@flash, :success) do %>
   <.alert msg={success} />
 <% end %>
-<%= if info = get_flash(@conn, :info) do %>
+<%= if info = Phoenix.Flash.get(@flash, :info) do %>
   <.alert msg={info} />
 <% end %>
-<%= if error = get_flash(@conn, :error) do %>
+<%= if error = Phoenix.Flash.get(@flash, :error) do %>
   <.alert msg={error} />
 <% end %>
 <%= @inner_content %>

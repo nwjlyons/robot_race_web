@@ -9,7 +9,6 @@ defmodule RobotRaceWeb.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases(),
@@ -32,14 +31,14 @@ defmodule RobotRaceWeb.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix, github: "phoenixframework/phoenix", ref: "e8a12ce", override: true},
-      {:phoenix_live_view,
-       github: "phoenixframework/phoenix_live_view", ref: "e1508d4", override: true},
-      {:phoenix_live_reload, "~> 1.3", only: :dev},
-      {:phoenix_pubsub, "~> 2.0"},
+      {:phoenix, "~> 1.7"},
+      {:phoenix_view, "~> 2.0"},
+      {:phoenix_live_view, "~> 0.18.18"},
+      {:phoenix_live_reload, "~> 1.4", only: :dev},
+      {:phoenix_pubsub, "~> 2.1"},
       {:esbuild, "~> 0.1", runtime: Mix.env() == :dev},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"},
+      {:plug_cowboy, "~> 2.6"},
       {:ecto, "~> 3.7"},
       {:phoenix_ecto, "~> 4.4"},
       {:ex_doc, "~> 0.24", runtime: false},
