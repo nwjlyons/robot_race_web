@@ -24,39 +24,33 @@ defmodule RobotRaceWeb.GameLive do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <%= case @game.state do %>
-      <% :setup -> %>
-        <.dialog>
-          <div class="prose">
-            <p class="text-center"><%= if(@admin?, do: "Invite players", else: "Get ready") %></p>
-            <%= if @admin? do %>
-              <.button id="copy-share-link" data-copy-link={@game_url} phx-hook="CopyLink">
-                Copy invite link
-              </.button>
-              <.button phx-click="countdown">Start countdown</.button>
-            <% end %>
-          </div>
-        </.dialog>
-      <% :counting_down -> %>
-        <.dialog>
-          <h1 class="text-gray font-mono text-center m-0 text-5">
-            <%= countdown_text(@game.countdown) %>
-          </h1>
-        </.dialog>
-      <% :finished -> %>
-        <.dialog>
-          <h1 class="text-gray font-mono text-center m-0 text-2 mb-4">
-            <%= Game.winner(@game).name %> wins!
-          </h1>
+    <.dialog :if={@game.state == :setup}>
+      <div class="prose">
+        <p class="text-center"><%= if(@admin?, do: "Invite players", else: "Get ready") %></p>
+        <%= if @admin? do %>
+          <.button id="copy-share-link" data-copy-link={@game_url} phx-hook="CopyLink">
+            Copy invite link
+          </.button>
+          <.button phx-click="countdown">Start countdown</.button>
+        <% end %>
+      </div>
+    </.dialog>
+    <.dialog :if={@game.state == :counting_down}>
+      <h1 class="text-gray font-mono text-center m-0 text-5">
+        <%= countdown_text(@game.countdown) %>
+      </h1>
+    </.dialog>
+    <.dialog :if={@game.state == :finished}>
+      <h1 class="text-gray font-mono text-center m-0 text-2 mb-4">
+        <%= Game.winner(@game).name %> wins!
+      </h1>
 
-          <div :if={@admin?} class="prose">
-            <button class="retro-button sm:p-4 sm:text-base" phx-click="play_again">
-              Play again
-            </button>
-          </div>
-        </.dialog>
-      <% _ -> %>
-    <% end %>
+      <div :if={@admin?} class="prose">
+        <button class="retro-button sm:p-4 sm:text-base" phx-click="play_again">
+          Play again
+        </button>
+      </div>
+    </.dialog>
     <.racetrack />
     """
   end
