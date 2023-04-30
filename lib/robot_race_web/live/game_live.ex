@@ -8,7 +8,7 @@ defmodule RobotRaceWeb.GameLive do
   alias RobotRaceWeb.GameServer
 
   @impl Phoenix.LiveView
-  def mount(_params, %{"game_id" => game_id, "robot_id" => robot_id}, socket) do
+  def mount(_params, %{"game_id" => game_id, "robot_id" => robot_id}, %Socket{} = socket) do
     %Game{} = game = GameServer.get(game_id)
     if connected?(socket), do: GameServer.subscribe(game)
 
@@ -72,38 +72,42 @@ defmodule RobotRaceWeb.GameLive do
   defp dialogs(assigns), do: ~H""
 
   @impl Phoenix.LiveView
-  def handle_event("race_track_mounted", _params, socket) do
+  def handle_event("race_track_mounted", _params, %Socket{} = socket) do
     {:noreply, push_game_state(socket)}
   end
 
-  def handle_event("countdown", _params, socket) do
+  def handle_event("countdown", _params, %Socket{} = socket) do
     GameServer.countdown(socket.assigns.game.id)
     {:noreply, socket}
   end
 
-  def handle_event("play_again", _params, socket) do
+  def handle_event("play_again", _params, %Socket{} = socket) do
     GameServer.play_again(socket.assigns.game.id)
     {:noreply, socket}
   end
 
-  def handle_event("score_point", %{"source" => "keyboard", "code" => "Space"}, socket) do
+  def handle_event(
+        "score_point",
+        %{"source" => "keyboard", "code" => "Space"},
+        %Socket{} = socket
+      ) do
     GameServer.score_point(socket.assigns.game.id, socket.assigns.robot_id)
     {:noreply, socket}
   end
 
-  def handle_event("score_point", %{"source" => "touch"}, socket) do
+  def handle_event("score_point", %{"source" => "touch"}, %Socket{} = socket) do
     GameServer.score_point(socket.assigns.game.id, socket.assigns.robot_id)
     {:noreply, socket}
   end
 
-  def handle_event(_event, _params, socket) do
+  def handle_event(_event, _params, %Socket{} = socket) do
     {:noreply, socket}
   end
 
   @impl Phoenix.LiveView
   def handle_info(
         %{topic: "game:" <> game_id, event: "update", payload: %{game: %Game{} = game}},
-        socket
+        %Socket{} = socket
       ) do
     if socket.assigns.game.id == game_id do
       {
@@ -117,7 +121,7 @@ defmodule RobotRaceWeb.GameLive do
     end
   end
 
-  def handle_info(%{topic: "game:" <> game_id, event: "terminate"}, socket) do
+  def handle_info(%{topic: "game:" <> game_id, event: "terminate"}, %Socket{} = socket) do
     if socket.assigns.game.id == game_id do
       {:noreply, socket |> put_flash(:error, "terminated") |> redirect(to: ~p"/")}
     else
@@ -125,7 +129,7 @@ defmodule RobotRaceWeb.GameLive do
     end
   end
 
-  def handle_info(_msg, socket) do
+  def handle_info(_msg, %Socket{} = socket) do
     {:noreply, socket}
   end
 

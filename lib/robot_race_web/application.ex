@@ -6,6 +6,7 @@ defmodule RobotRaceWeb.Application do
   @impl Application
   def start(_type, _args) do
     children = [
+      RobotRaceWeb.StatsServer,
       {DynamicSupervisor, strategy: :one_for_one, name: RobotRaceWeb.DynamicSupervisor},
       RobotRaceWeb.Endpoint,
       {Phoenix.PubSub, name: RobotRaceWeb.PubSub}
