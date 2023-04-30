@@ -16,7 +16,7 @@ defmodule RobotRaceWeb do
 
   def live() do
     quote do
-      use Phoenix.LiveView, layout: {RobotRaceWeb.LayoutView, "live.html"}
+      use Phoenix.LiveView, layout: {RobotRaceWeb.LayoutView, :live}
       alias Phoenix.LiveView
       alias Phoenix.LiveView.Socket
 

@@ -46,10 +46,11 @@ defmodule RobotRaceWeb.GameLive do
   end
 
   defp dialogs(%{game: %Game{state: :counting_down, countdown: countdown}} = assigns) do
+    assigns = assign(assigns, countdown: countdown)
     ~H"""
     <div class="absolute h-full w-full flex flex-col justify-center items-center z-10">
       <h1 class="text-gray font-mono text-center m-0 text-5">
-        <%= countdown_text(countdown) %>
+        <%= countdown_text(@countdown) %>
       </h1>
     </div>
     """
