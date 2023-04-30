@@ -24,14 +24,7 @@ defmodule RobotRaceWeb.GameLive do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <%= dialogs(assigns) %>
-    <.racetrack />
-    """
-  end
-
-  defp dialogs(%{game: %Game{state: :setup}} = assigns) do
-    ~H"""
-    <div class="absolute h-full w-full flex flex-col justify-center items-center z-10">
+    <.dialog :if={@game.state == :setup}>
       <div class="prose">
         <p class="text-center"><%= if(@admin?, do: "Invite players", else: "Get ready") %></p>
         <%= if @admin? do %>
@@ -41,35 +34,26 @@ defmodule RobotRaceWeb.GameLive do
           <.button phx-click="countdown">Start countdown</.button>
         <% end %>
       </div>
-    </div>
-    """
-  end
-
-  defp dialogs(%{game: %Game{state: :counting_down, countdown: countdown}} = assigns) do
-    ~H"""
-    <div class="absolute h-full w-full flex flex-col justify-center items-center z-10">
+    </.dialog>
+    <.dialog :if={@game.state == :counting_down}>
       <h1 class="text-gray font-mono text-center m-0 text-5">
-        <%= countdown_text(countdown) %>
+        <%= countdown_text(@game.countdown) %>
       </h1>
-    </div>
-    """
-  end
-
-  defp dialogs(%{game: %Game{state: :finished}} = assigns) do
-    ~H"""
-    <div class="absolute h-full w-full flex flex-col justify-center items-center z-10 bg-black-opacity-80">
+    </.dialog>
+    <.dialog :if={@game.state == :finished}>
       <h1 class="text-gray font-mono text-center m-0 text-2 mb-4">
         <%= Game.winner(@game).name %> wins!
       </h1>
 
       <div :if={@admin?} class="prose">
-        <button class="retro-button sm:p-4 sm:text-base" phx-click="play_again">Play again</button>
+        <button class="retro-button sm:p-4 sm:text-base" phx-click="play_again">
+          Play again
+        </button>
       </div>
-    </div>
+    </.dialog>
+    <.racetrack />
     """
   end
-
-  defp dialogs(assigns), do: ~H""
 
   @impl Phoenix.LiveView
   def handle_event("race_track_mounted", _params, %Socket{} = socket) do

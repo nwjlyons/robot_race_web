@@ -47,4 +47,14 @@ defmodule RobotRaceWeb.Components do
     </canvas>
     """
   end
+
+  slot :inner_block, required: true
+
+  def dialog(assigns) do
+    ~H"""
+    <div class="absolute h-full w-full flex flex-col justify-center items-center z-10">
+      <%= render_slot(@inner_block) %>
+    </div>
+    """
+  end
 end
