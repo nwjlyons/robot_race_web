@@ -10,7 +10,7 @@ defmodule RobotRace.Robot do
 
   typedstruct do
     field :id, RobotId.t()
-    field :name, String.t()
+    field :name, String.t(), default: ""
     field :role, role(), default: :guest
     field :score, non_neg_integer(), default: 0
   end
