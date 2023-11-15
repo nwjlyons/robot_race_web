@@ -15,3 +15,5 @@ config :robot_race_web, RobotRaceWeb.Endpoint,
       ~r{lib/robot_race_web/templates/.*(eex)$}
     ]
   ]
+
+config :phoenix_live_view, debug_heex_annotations: true
