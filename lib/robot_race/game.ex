@@ -37,10 +37,12 @@ defmodule RobotRace.Game do
     }
   end
 
+  @type join_error() :: :game_in_progress | :max_robots
+
   @doc """
   Join game.
   """
-  @spec join(t(), Robot.t()) :: {:ok, t()} | {:error, :game_in_progress} | {:error, :max_robots}
+  @spec join(t(), Robot.t()) :: {:ok, t()} | {:error, join_error()}
   def join(%__MODULE__{state: state}, %Robot{})
       when state in [:counting_down, :playing, :finished] do
     {:error, :game_in_progress}
