@@ -130,7 +130,7 @@ defmodule RobotRaceWeb.GameServer do
 
   @impl GenServer
   def handle_info(:countdown, %Game{} = game) do
-    Logger.debug("counting down id=#{game.id} countdown=#{game.countdown}")
+    Logger.debug([message: "counting down", id: game.id, countdown: game.countdown])
     game = Game.countdown(game)
 
     case game do
