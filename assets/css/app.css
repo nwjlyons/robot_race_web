@@ -89,6 +89,10 @@ html {
     justify-content: center;
 }
 
+.justify-between {
+    justify-content: space-between;
+}
+
 .items-center {
     align-items: center;
 }
@@ -126,6 +130,10 @@ html {
     color: var(--gray)
 }
 
+.text-darkgray {
+    color: var(--dark-gray)
+}
+
 .font-mono {
     font-family: var(--font-mono);
 }
@@ -154,6 +162,14 @@ html {
 
 .text-5 {
     font-size: 5rem
+}
+
+.text-4 {
+    font-size: 4rem
+}
+
+.text-3 {
+    font-size: 3rem
 }
 
 .text-2 {

@@ -5,6 +5,7 @@ defmodule RobotRaceWeb.GameLive do
   use RobotRaceWeb, :live
 
   alias RobotRace.Game
+  alias RobotRace.Robot
   alias RobotRaceWeb.GameServer
 
   @impl Phoenix.LiveView
@@ -41,8 +42,18 @@ defmodule RobotRaceWeb.GameLive do
       </h1>
     </.dialog>
     <.dialog :if={@game.state == :finished}>
-      <h1 class="text-gray font-mono text-center m-0 text-2 mb-4">
-        <%= Game.winner(@game).name %> wins!
+      <h1 class="text-center m-0 mb-4">
+        <div class="text-gray font-mono text-4"><%= Game.winner(@game).name %> wins!</div>
+        <div class="p-4">
+          <div class="text-center font-mono text-darkgray">Leaderboard</div>
+          <div
+            :for={{%Robot{} = robot, win_count} <- Game.leaderboard(@game)}
+            class="flex justify-between"
+          >
+            <div class="text-darkgray font-mono"><%= robot.name %></div>
+            <div class="text-darkgray font-mono"><%= win_count %></div>
+          </div>
+        </div>
       </h1>
 
       <div :if={@admin?} class="prose">

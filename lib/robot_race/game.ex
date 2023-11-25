@@ -19,6 +19,7 @@ defmodule RobotRace.Game do
     field :robots, %{RobotId.t() => Robot.t()}, default: %{}
     field :robots_order, list(RobotId.t()), default: []
     field :state, state(), default: :setup
+    field :previous_wins, %{RobotId.t() => non_neg_integer()}, default: %{}
   end
 
   @type state() :: :setup | :counting_down | :playing | :finished
@@ -150,8 +151,35 @@ defmodule RobotRace.Game do
         num_robots: game.config.num_robots,
         countdown: game.config.countdown,
         robots: reset_robot_scores(game.robots),
-        state: :setup
+        state: :setup,
+        previous_wins: save_winner(game)
     }
+  end
+
+  @doc """
+  Leaderboard
+
+  Robots with scores sorted in descending order.
+  """
+  @spec leaderboard(t()) :: list({Robot.t(), non_neg_integer()})
+  def leaderboard(%__MODULE__{} = game) do
+    current_winner_id = winner(game).id
+
+    game
+    |> robots()
+    |> Enum.map(fn %Robot{} = robot ->
+      previous_win_count = Map.get(game.previous_wins, robot.id, 0)
+
+      win_count =
+        if current_winner_id == robot.id do
+          previous_win_count + 1
+        else
+          previous_win_count
+        end
+
+      {robot, win_count}
+    end)
+    |> Enum.sort_by(fn {%Robot{}, score} -> score end, :desc)
   end
 
   defp reset_robot_scores(%{} = robots) do
@@ -160,5 +188,9 @@ defmodule RobotRace.Game do
       {robot_id, %Robot{robot | score: 0}}
     end)
     |> Enum.into(%{})
+  end
+
+  defp save_winner(%__MODULE__{} = game) do
+    Map.update(game.previous_wins, winner(game).id, 1, &(&1 + 1))
   end
 end
