@@ -60,8 +60,7 @@ defmodule RobotRaceWeb.GameServer do
   @doc """
   Join game.
   """
-  @spec join(GameId.t(), Robot.t()) ::
-          {:ok, Game.t()} | {:error, :game_in_progress} | {:error, :max_robots}
+  @spec join(GameId.t(), Robot.t()) :: {:ok, Game.t()} | {:error, Game.join_error()}
   def join(game_id() = game_id, %Robot{} = robot) do
     GenServer.call(via_tuple(game_id), {:join, robot})
   end

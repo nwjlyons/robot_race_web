@@ -52,7 +52,7 @@ defmodule RobotRace.GameTest do
     end
 
     test "does not add robot while game has max robots", %{bender: bender} do
-      assert {:error, :max_robots} = Game.new(%GameConfig{num_robots: ..}) |> Game.join(bender)
+      assert {:error, :game_full} = Game.new(%GameConfig{num_robots: ..}) |> Game.join(bender)
     end
   end
 

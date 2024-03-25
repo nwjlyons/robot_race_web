@@ -38,7 +38,7 @@ defmodule RobotRace.Game do
     }
   end
 
-  @type join_error() :: :game_in_progress | :max_robots
+  @type join_error() :: :game_in_progress | :game_full
 
   @doc """
   Join game.
@@ -51,7 +51,7 @@ defmodule RobotRace.Game do
 
   def join(%__MODULE__{robots: %{} = robots, num_robots: %Range{last: max_robots}}, %Robot{})
       when map_size(robots) >= max_robots do
-    {:error, :max_robots}
+    {:error, :game_full}
   end
 
   def join(%__MODULE__{} = game, %Robot{} = robot) do

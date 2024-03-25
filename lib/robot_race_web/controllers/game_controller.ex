@@ -61,7 +61,7 @@ defmodule RobotRaceWeb.GameController do
       {:error, :game_in_progress} ->
         error(conn, "game in progress")
 
-      {:error, :max_robots} ->
+      {:error, :game_full} ->
         error(conn, "game full")
     end
   end
