@@ -25,43 +25,49 @@ defmodule RobotRaceWeb.GameLive do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <.dialog :if={@game.state == :setup}>
-      <div class="prose">
-        <p class="text-center"><%= if(@admin?, do: "Invite players", else: "Get ready") %></p>
-        <%= if @admin? do %>
-          <.button id="copy-share-link" data-copy-link={@game_url} phx-hook="CopyLink">
-            Copy invite link
-          </.button>
-          <.button phx-click="countdown">Start countdown</.button>
-        <% end %>
-      </div>
-    </.dialog>
-    <.dialog :if={@game.state == :counting_down}>
-      <h1 class="text-gray font-mono text-center m-0 text-5">
-        <%= countdown_text(@game.countdown) %>
-      </h1>
-    </.dialog>
-    <.dialog :if={@game.state == :finished}>
-      <h1 class="text-center m-0 mb-4">
-        <div class="text-gray font-mono text-4"><%= Game.winner(@game).name %> wins!</div>
-        <div class="p-4">
-          <div class="text-center font-mono text-darkgray">Leaderboard</div>
-          <div
-            :for={{%Robot{} = robot, win_count} <- Game.leaderboard(@game)}
-            class="flex justify-between"
-          >
-            <div class="text-darkgray font-mono"><%= robot.name %></div>
-            <div class="text-darkgray font-mono"><%= win_count %></div>
+    <%= case @game.state do %>
+      <% :setup -> %>
+        <.dialog>
+          <div class="prose">
+            <p class="text-center"><%= if(@admin?, do: "Invite players", else: "Get ready") %></p>
+            <%= if @admin? do %>
+              <.button id="copy-share-link" data-copy-link={@game_url} phx-hook="CopyLink">
+                Copy invite link
+              </.button>
+              <.button phx-click="countdown">Start countdown</.button>
+            <% end %>
           </div>
-        </div>
-      </h1>
+        </.dialog>
+      <% :counting_down -> %>
+        <.dialog>
+          <h1 class="text-gray font-mono text-center m-0 text-5">
+            <%= countdown_text(@game.countdown) %>
+          </h1>
+        </.dialog>
+      <% :finished -> %>
+        <.dialog>
+          <h1 class="text-center m-0 mb-4">
+            <div class="text-gray font-mono text-4"><%= Game.winner(@game).name %> wins!</div>
+            <div class="p-4">
+              <div class="text-center font-mono text-darkgray">Leaderboard</div>
+              <div
+                :for={{%Robot{} = robot, win_count} <- Game.leaderboard(@game)}
+                class="flex justify-between"
+              >
+                <div class="text-darkgray font-mono"><%= robot.name %></div>
+                <div class="text-darkgray font-mono"><%= win_count %></div>
+              </div>
+            </div>
+          </h1>
 
-      <div :if={@admin?} class="prose">
-        <button class="retro-button sm:p-4 sm:text-base" phx-click="play_again">
-          Play again
-        </button>
-      </div>
-    </.dialog>
+          <div :if={@admin?} class="prose">
+            <button class="retro-button sm:p-4 sm:text-base" phx-click="play_again">
+              Play again
+            </button>
+          </div>
+        </.dialog>
+      <% _other -> %>
+    <% end %>
     <.racetrack />
     """
   end
