@@ -34,7 +34,7 @@ defmodule RobotRaceWeb.MixProject do
       {:phoenix, "~> 1.7"},
       {:phoenix_view, "~> 2.0"},
       {:phoenix_live_view, "~> 0.20.1"},
-      {:phoenix_live_reload, "~> 1.4", only: :dev},
+      {:phoenix_live_reload, "~> 1.5.3", only: :dev},
       {:phoenix_pubsub, "~> 2.1"},
       {:esbuild, "~> 0.1", runtime: Mix.env() == :dev},
       {:jason, "~> 1.0"},
@@ -43,7 +43,7 @@ defmodule RobotRaceWeb.MixProject do
       {:phoenix_ecto, "~> 4.4"},
       {:ex_doc, "~> 0.24", runtime: false},
       {:nanoid, "~> 2.0"},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:typed_struct, "~> 0.3.0", runtime: false}

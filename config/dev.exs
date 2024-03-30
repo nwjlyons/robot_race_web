@@ -13,7 +13,8 @@ config :robot_race_web, RobotRaceWeb.Endpoint,
       ~r{lib/robot_race_web/views/.*(ex)$},
       ~r{lib/robot_race_web/live/.*(ex|heex)$},
       ~r{lib/robot_race_web/templates/.*(eex)$}
-    ]
+    ],
+    web_console_logger: true
   ]
 
 config :phoenix_live_view, debug_heex_annotations: true

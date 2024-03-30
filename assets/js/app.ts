@@ -16,3 +16,9 @@ let liveSocket = new LiveSocket("/live", Socket, {
 });
 liveSocket.connect();
 window.liveSocket = liveSocket;
+
+window.addEventListener("phx:live_reload:attached", ({detail: reloader}) => {
+    // enable server log streaming to client.
+    // disable with reloader.disableServerLogs()
+    reloader.enableServerLogs()
+})
