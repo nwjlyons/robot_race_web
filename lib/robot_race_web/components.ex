@@ -58,7 +58,6 @@ defmodule RobotRaceWeb.Components do
     """
   end
 
-
   attr :field, Phoenix.HTML.FormField
   attr :type, :string, values: ["text", "password"], default: "text"
 
@@ -78,7 +77,7 @@ defmodule RobotRaceWeb.Components do
 
   def input(assigns) do
     ~H"""
-    <input id={@id} type={@type} name={@name} value={@value} {@rest}/>
+    <input id={@id} type={@type} name={@name} value={@value} {@rest} />
     """
   end
 end

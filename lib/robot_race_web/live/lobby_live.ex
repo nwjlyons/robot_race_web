@@ -53,7 +53,13 @@ defmodule RobotRaceWeb.LobbyLive do
           >
             <div class="mb-4">
               <%= error_tag(@form, :name) %>
-              <.input field={@form[:name]} autofocus placeholder="Name" class="retro-text-input sm:p-4" maxlength="6" />
+              <.input
+                field={@form[:name]}
+                autofocus
+                placeholder="Name"
+                class="retro-text-input sm:p-4"
+                maxlength="6"
+              />
             </div>
             <div>
               <.button><%= if(@joining?, do: "Join", else: "Start new game") %></.button>
