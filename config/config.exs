@@ -1,6 +1,7 @@
 import Config
 
 config :robot_race_web, RobotRaceWeb.Endpoint,
+  adapter: Bandit.PhoenixAdapter,
   url: [host: "localhost"],
   http: [port: 4000],
   pubsub_server: RobotRaceWeb.PubSub,

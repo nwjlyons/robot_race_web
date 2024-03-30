@@ -65,7 +65,7 @@ defmodule RobotRaceWeb.Components do
   attr :id, :string
   attr :name, :string
   attr :value, :any
-  attr :rest, :global
+  attr :rest, :global, include: ~w(maxlength)
 
   def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns

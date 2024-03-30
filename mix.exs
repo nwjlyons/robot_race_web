@@ -38,7 +38,7 @@ defmodule RobotRaceWeb.MixProject do
       {:phoenix_pubsub, "~> 2.1"},
       {:esbuild, "~> 0.1", runtime: Mix.env() == :dev},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.6"},
+      {:bandit, "~> 1.4"},
       {:ecto, "~> 3.11"},
       {:phoenix_ecto, "~> 4.4"},
       {:ex_doc, "~> 0.24", runtime: false},
