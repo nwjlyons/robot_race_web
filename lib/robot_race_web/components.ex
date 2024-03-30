@@ -57,4 +57,28 @@ defmodule RobotRaceWeb.Components do
     </div>
     """
   end
+
+
+  attr :field, Phoenix.HTML.FormField
+  attr :type, :string, values: ["text", "password"], default: "text"
+
+  attr :id, :string
+  attr :name, :string
+  attr :value, :any
+  attr :rest, :global
+
+  def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil)
+    |> assign_new(:id, fn -> field.id end)
+    |> assign_new(:value, fn -> field.value end)
+    |> assign_new(:name, fn -> field.name end)
+    |> input()
+  end
+
+  def input(assigns) do
+    ~H"""
+    <input id={@id} type={@type} name={@name} value={@value} {@rest}/>
+    """
+  end
 end
