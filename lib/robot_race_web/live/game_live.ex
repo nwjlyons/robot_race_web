@@ -34,7 +34,7 @@ defmodule RobotRaceWeb.GameLive do
               <.button id="copy-share-link" data-copy-link={@game_url} phx-hook="CopyLink">
                 Copy invite link
               </.button>
-              <.button phx-click="countdown">Start countdown</.button>
+              <.button phx-click="start_countdown">Start countdown</.button>
             <% end %>
           </div>
         </.dialog>
@@ -77,14 +77,22 @@ defmodule RobotRaceWeb.GameLive do
     {:noreply, push_game_state(socket)}
   end
 
-  def handle_event("countdown", _params, %Socket{} = socket) do
-    GameServer.countdown(socket.assigns.game.id)
-    {:noreply, socket}
+  def handle_event("start_countdown", _params, %Socket{} = socket) do
+    if socket.assigns.admin? do
+      GameServer.countdown(socket.assigns.game.id)
+      {:noreply, socket}
+    else
+      {:noreply, permission_denied(socket)}
+    end
   end
 
   def handle_event("play_again", _params, %Socket{} = socket) do
-    GameServer.play_again(socket.assigns.game.id)
-    {:noreply, socket}
+    if socket.assigns.admin? do
+      GameServer.play_again(socket.assigns.game.id)
+      {:noreply, socket}
+    else
+      {:noreply, permission_denied(socket)}
+    end
   end
 
   def handle_event(
@@ -142,5 +150,9 @@ defmodule RobotRaceWeb.GameLive do
       winning_score: game.winning_score,
       robots: Game.robots(socket.assigns.game)
     })
+  end
+
+  defp permission_denied(%Socket{} = socket) do
+    put_flash(socket, :error, "permission denied")
   end
 end
