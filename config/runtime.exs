@@ -14,7 +14,7 @@ if config_env() == :prod do
     http: [
       port: String.to_integer(System.get_env("PORT") || "4000"),
       # IMPORTANT: support IPv6 addresses
-      transport_options: [socket_opts: [:inet6]]
+      ip: {0, 0, 0, 0, 0, 0, 0, 0}
     ],
     secret_key_base: secret_key_base
 end
