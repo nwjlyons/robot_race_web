@@ -5,6 +5,8 @@ defmodule RobotRaceWeb.Router do
 
   import Phoenix.LiveView.Router
 
+  @container {:div, class: "h-full flex"}
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -14,14 +16,15 @@ defmodule RobotRaceWeb.Router do
     plug :put_root_layout, {RobotRaceWeb.LayoutView, "root.html"}
   end
 
+
   scope "/" do
     pipe_through :browser
 
-    live "/_stats", RobotRaceWeb.StatsLive, :stats, container: {:div, class: "h-full flex"}
-    live "/:id/join", RobotRaceWeb.LobbyLive, :join, container: {:div, class: "h-full flex"}
+    live "/_stats", RobotRaceWeb.StatsLive, :stats, container: @container
+    live "/:id/join", RobotRaceWeb.LobbyLive, :join, container: @container
     get "/:id", RobotRaceWeb.GameController, :show
     post "/:id", RobotRaceWeb.GameController, :join
     post "/", RobotRaceWeb.GameController, :create
-    live "/", RobotRaceWeb.LobbyLive, :create, container: {:div, class: "h-full flex"}
+    live "/", RobotRaceWeb.LobbyLive, :create, container: @container
   end
 end
