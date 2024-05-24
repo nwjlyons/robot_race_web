@@ -16,7 +16,6 @@ defmodule RobotRaceWeb.Router do
     plug :put_root_layout, {RobotRaceWeb.LayoutView, "root.html"}
   end
 
-
   scope "/" do
     pipe_through :browser
 

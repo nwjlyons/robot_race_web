@@ -33,7 +33,10 @@ defmodule RobotRaceWeb.MixProject do
     [
       {:phoenix, "~> 1.7"},
       {:phoenix_view, "~> 2.0"},
-      {:phoenix_live_view, "~> 0.20.1"},
+      {:phoenix_live_view,
+       github: "phoenixframework/phoenix_live_view",
+       ref: "bc000b9d681e2456946b08e6e6ed0795bb77ff0e",
+       override: true},
       {:phoenix_live_reload, "~> 1.5.3", only: :dev},
       {:phoenix_pubsub, "~> 2.1"},
       {:esbuild, "~> 0.1", runtime: Mix.env() == :dev},
@@ -92,7 +95,8 @@ defmodule RobotRaceWeb.MixProject do
   defp aliases do
     [
       "assets.deploy": ["esbuild default --minify", "phx.digest"],
-      "deps.sync": ["deps.get", "deps.clean --unlock --unused"]
+      "deps.sync": ["deps.get", "deps.clean --unlock --unused"],
+      lint: ["format", "compile"]
     ]
   end
 end
