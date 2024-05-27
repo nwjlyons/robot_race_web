@@ -6,7 +6,7 @@ defmodule RobotRaceWeb.Endpoint do
     store: :cookie,
     # Two weeks
     max_age: 60 * 60 * 24 * 14,
-    key: "_robot_race_web_key",
+    key: "_robot_race",
     signing_salt: "3WZQ85Tu",
     encryption_salt: "gvkjLOmjZOx0esLoT5nGmzps8p0YfyFowXgpWQ2oGOcjGUNOrStMnV/jnW0bfqdn"
   ]
