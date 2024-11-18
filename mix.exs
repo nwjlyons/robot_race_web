@@ -31,18 +31,15 @@ defmodule RobotRaceWeb.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix, "~> 1.7"},
+      {:phoenix, "~> 1.7.14"},
       {:phoenix_view, "~> 2.0"},
-      {:phoenix_live_view,
-       github: "phoenixframework/phoenix_live_view",
-       ref: "bc000b9d681e2456946b08e6e6ed0795bb77ff0e",
-       override: true},
+      {:phoenix_live_view, "~> 1.0.0-rc.7"},
       {:phoenix_live_reload, "~> 1.5.3", only: :dev},
       {:phoenix_pubsub, "~> 2.1"},
-      {:esbuild, "~> 0.1", runtime: Mix.env() == :dev},
+      {:esbuild, "~> 0.8.2", runtime: Mix.env() == :dev},
       {:jason, "~> 1.0"},
       {:bandit, "~> 1.4"},
-      {:ecto, "~> 3.11"},
+      {:ecto, "~> 3.12.4"},
       {:phoenix_ecto, "~> 4.4"},
       {:ex_doc, "~> 0.24", runtime: false},
       {:nanoid, "~> 2.0"},
