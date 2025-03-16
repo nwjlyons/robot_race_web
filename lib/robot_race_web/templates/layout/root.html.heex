@@ -13,10 +13,10 @@
     <link rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer type="text/javascript" src={~p"/assets/app.js"}>
     </script>
-    <%= csrf_meta_tag() %>
-    <.live_title><%= assigns[:page_title] || "Robot Race" %></.live_title>
+    {csrf_meta_tag()}
+    <.live_title>{assigns[:page_title] || "Robot Race"}</.live_title>
   </head>
   <body class="crt-lines bg-black h-full">
-    <%= @inner_content %>
+    {@inner_content}
   </body>
 </html>

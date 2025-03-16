@@ -21,7 +21,7 @@ defmodule RobotRaceWeb.StatsLive do
     <div>
       <div class="absolute h-full w-full flex flex-col justify-center items-center z-10">
         <h1 class="text-gray font-mono text-center m-0 text-5">
-          <%= @stats.num_games %>
+          {@stats.num_games}
         </h1>
       </div>
     </div>
