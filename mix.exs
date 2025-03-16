@@ -38,10 +38,10 @@ defmodule RobotRaceWeb.MixProject do
       {:phoenix_pubsub, "~> 2.1"},
       {:esbuild, "~> 0.8.2", runtime: Mix.env() == :dev},
       {:jason, "~> 1.0"},
-      {:bandit, "~> 1.4"},
+      {:bandit, "~> 1.6"},
       {:ecto, "~> 3.12.4"},
       {:phoenix_ecto, "~> 4.4"},
-      {:ex_doc, "~> 0.24", runtime: false},
+      {:ex_doc, "~> 0.37", runtime: false},
       {:nanoid, "~> 2.1"},
       {:typed_struct, "~> 0.3.0", runtime: false}
     ]
