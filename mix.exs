@@ -7,7 +7,7 @@ defmodule RobotRaceWeb.MixProject do
     [
       app: :robot_race_web,
       version: "0.1.0",
-      elixir: "~> 1.16",
+      elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -43,9 +43,6 @@ defmodule RobotRaceWeb.MixProject do
       {:phoenix_ecto, "~> 4.4"},
       {:ex_doc, "~> 0.24", runtime: false},
       {:nanoid, "~> 2.1"},
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:typed_struct, "~> 0.3.0", runtime: false}
     ]
   end

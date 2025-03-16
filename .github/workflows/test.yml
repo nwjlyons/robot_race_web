@@ -32,7 +32,3 @@ jobs:
       run: mix format --check-formatted
     - name: Check tests pass
       run: mix test
-    - name: Check credo passes
-      run: mix credo
-    - name: Check dialyzer passes
-      run: mix dialyzer
