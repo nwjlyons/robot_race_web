@@ -7,4 +7,4 @@
 <%= if error = Phoenix.Flash.get(@flash, :error) do %>
   <.alert msg={error} />
 <% end %>
-<%= @inner_content %>
+{@inner_content}

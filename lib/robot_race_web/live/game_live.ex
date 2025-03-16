@@ -29,7 +29,7 @@ defmodule RobotRaceWeb.GameLive do
       <% :setup -> %>
         <.dialog>
           <div class="prose">
-            <p class="text-center"><%= if(@admin?, do: "Invite players", else: "Get ready") %></p>
+            <p class="text-center">{if(@admin?, do: "Invite players", else: "Get ready")}</p>
             <%= if @admin? do %>
               <.button id="copy-share-link" data-copy-link={@game_url} phx-hook="CopyLink">
                 Copy invite link
@@ -41,21 +41,21 @@ defmodule RobotRaceWeb.GameLive do
       <% :counting_down -> %>
         <.dialog>
           <h1 class="text-gray font-mono text-center m-0 text-5">
-            <%= countdown_text(@game.countdown) %>
+            {countdown_text(@game.countdown)}
           </h1>
         </.dialog>
       <% :finished -> %>
         <.dialog>
           <h1 class="text-center m-0 mb-4">
-            <div class="text-gray font-mono text-4"><%= Game.winner(@game).name %> wins!</div>
+            <div class="text-gray font-mono text-4">{Game.winner(@game).name} wins!</div>
             <div class="p-4">
               <div class="text-center font-mono text-darkgray">Leaderboard</div>
               <div
                 :for={{%Robot{} = robot, win_count} <- Game.leaderboard(@game)}
                 class="flex justify-between"
               >
-                <div class="text-darkgray font-mono"><%= robot.name %></div>
-                <div class="text-darkgray font-mono"><%= win_count %></div>
+                <div class="text-darkgray font-mono">{robot.name}</div>
+                <div class="text-darkgray font-mono">{win_count}</div>
               </div>
             </div>
           </h1>

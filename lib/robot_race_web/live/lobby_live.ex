@@ -38,7 +38,7 @@ defmodule RobotRaceWeb.LobbyLive do
         </div>
         <div class="sm:mb-8">
           <div class="prose text-xs sm:text-base text-center">
-            <p><%= @config.num_robots.first %> - <%= @config.num_robots.last %> players</p>
+            <p>{@config.num_robots.first} - {@config.num_robots.last} players</p>
             <p>First to the top wins!</p>
             <p>Hit spacebar or tap screen to race</p>
           </div>
@@ -52,7 +52,7 @@ defmodule RobotRaceWeb.LobbyLive do
             action={@form_action}
           >
             <div class="mb-4">
-              <%= error_tag(@form, :name) %>
+              {error_tag(@form, :name)}
               <.input
                 field={@form[:name]}
                 autofocus
@@ -62,7 +62,7 @@ defmodule RobotRaceWeb.LobbyLive do
               />
             </div>
             <div>
-              <.button><%= if(@joining?, do: "Join", else: "Start new game") %></.button>
+              <.button>{if(@joining?, do: "Join", else: "Start new game")}</.button>
             </div>
           </.form>
         </div>

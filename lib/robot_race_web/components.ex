@@ -12,7 +12,7 @@ defmodule RobotRaceWeb.Components do
   def alert(assigns) do
     ~H"""
     <div class="text-red font-mono flex flex-col items-center w-full p-4 z-10 h-fit">
-      <%= @msg %>
+      {@msg}
     </div>
     """
   end
@@ -28,7 +28,7 @@ defmodule RobotRaceWeb.Components do
   def button(assigns) do
     ~H"""
     <button class="retro-button sm:p-4 sm:text-base" {@rest}>
-      <%= render_slot(@inner_block) || @text %>
+      {render_slot(@inner_block) || @text}
     </button>
     """
   end
@@ -53,7 +53,7 @@ defmodule RobotRaceWeb.Components do
   def dialog(assigns) do
     ~H"""
     <div class="absolute h-full w-full flex flex-col justify-center items-center z-10">
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </div>
     """
   end
