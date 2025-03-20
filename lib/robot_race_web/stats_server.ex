@@ -28,7 +28,7 @@ defmodule RobotRaceWeb.StatsServer do
 
   @impl GenServer
   def handle_call(:increment_num_games, _from, %Stats{} = stats) do
-    stats = %Stats{stats | num_games: stats.num_games + 1}
+    stats = %{stats | num_games: stats.num_games + 1}
     broadcast(stats)
     {:reply, stats, stats}
   end

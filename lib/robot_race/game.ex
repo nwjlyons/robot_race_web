@@ -56,7 +56,7 @@ defmodule RobotRace.Game do
 
   def join(%__MODULE__{} = game, %Robot{} = robot) do
     {:ok,
-     %__MODULE__{
+     %{
        game
        | robots: Map.put(game.robots, robot.id, robot),
          robots_order: game.robots_order ++ [robot.id]
@@ -69,11 +69,11 @@ defmodule RobotRace.Game do
   @spec score_point(t(), RobotId.t()) :: t()
   def score_point(%__MODULE__{state: :playing} = game, robot_id() = robot_id) do
     robot = Map.fetch!(game.robots, robot_id)
-    robot = %Robot{robot | score: robot.score + 1}
-    game = %__MODULE__{game | robots: Map.replace!(game.robots, robot.id, robot)}
+    robot = %{robot | score: robot.score + 1}
+    game = %{game | robots: Map.replace!(game.robots, robot.id, robot)}
 
     if robot.score >= game.winning_score do
-      %__MODULE__{game | state: :finished}
+      %{game | state: :finished}
     else
       game
     end
@@ -102,22 +102,22 @@ defmodule RobotRace.Game do
   Play game.
   """
   @spec play(t()) :: t()
-  def play(%__MODULE__{} = game), do: %__MODULE__{game | state: :playing}
+  def play(%__MODULE__{} = game), do: %{game | state: :playing}
 
   @doc """
   Countdown to start.
   """
   @spec countdown(t()) :: t()
   def countdown(%__MODULE__{state: :setup} = game) do
-    %__MODULE__{game | state: :counting_down}
+    %{game | state: :counting_down}
   end
 
   def countdown(%__MODULE__{countdown: countdown} = game) when countdown > 0 do
-    %__MODULE__{game | state: :counting_down, countdown: countdown - 1}
+    %{game | state: :counting_down, countdown: countdown - 1}
   end
 
   def countdown(%__MODULE__{countdown: 0} = game) do
-    %__MODULE__{game | state: :playing}
+    %{game | state: :playing}
   end
 
   @doc """
@@ -145,7 +145,7 @@ defmodule RobotRace.Game do
   """
   @spec play_again(t()) :: t()
   def play_again(%__MODULE__{} = game) do
-    %__MODULE__{
+    %{
       game
       | winning_score: game.config.winning_score,
         num_robots: game.config.num_robots,
@@ -185,7 +185,7 @@ defmodule RobotRace.Game do
   defp reset_robot_scores(%{} = robots) do
     robots
     |> Enum.map(fn {robot_id, %Robot{} = robot} ->
-      {robot_id, %Robot{robot | score: 0}}
+      {robot_id, %{robot | score: 0}}
     end)
     |> Enum.into(%{})
   end
