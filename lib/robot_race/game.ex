@@ -182,12 +182,8 @@ defmodule RobotRace.Game do
     |> Enum.sort_by(fn {%Robot{}, score} -> score end, :desc)
   end
 
-  defp reset_robot_scores(%{} = robots) do
-    robots
-    |> Enum.map(fn {robot_id, %Robot{} = robot} ->
-      {robot_id, %{robot | score: 0}}
-    end)
-    |> Enum.into(%{})
+  defp reset_robot_scores(robots) do
+    Map.new(robots, fn {id, robot} -> {id, %{robot | score: 0}} end)
   end
 
   defp save_winner(%__MODULE__{} = game) do
