@@ -47,7 +47,7 @@ defmodule RobotRaceWeb.GameLive do
       <% :finished -> %>
         <.dialog>
           <h1 class="text-center m-0 mb-4">
-            <div class="text-gray font-mono text-4">{Game.winner(@game).name} wins!</div>
+            <div class="text-gray font-mono text-4">{Game.winner!(@game).name} wins!</div>
             <div class="p-4">
               <div class="text-center font-mono text-darkgray">Leaderboard</div>
               <div

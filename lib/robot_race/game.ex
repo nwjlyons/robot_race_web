@@ -133,8 +133,8 @@ defmodule RobotRace.Game do
   @doc """
   Return winning robot.
   """
-  @spec winner(t()) :: Robot.t()
-  def winner(%__MODULE__{} = game) do
+  @spec winner!(t()) :: Robot.t()
+  def winner!(%__MODULE__{} = game) do
     game
     |> score_board()
     |> hd()
@@ -163,7 +163,7 @@ defmodule RobotRace.Game do
   """
   @spec leaderboard(t()) :: list({Robot.t(), non_neg_integer()})
   def leaderboard(%__MODULE__{} = game) do
-    current_winner_id = winner(game).id
+    current_winner_id = winner!(game).id
 
     game
     |> robots()
@@ -187,6 +187,6 @@ defmodule RobotRace.Game do
   end
 
   defp save_winner(%__MODULE__{} = game) do
-    Map.update(game.previous_wins, winner(game).id, 1, &(&1 + 1))
+    Map.update(game.previous_wins, winner!(game).id, 1, &(&1 + 1))
   end
 end
