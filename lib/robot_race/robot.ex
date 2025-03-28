@@ -6,7 +6,7 @@ defmodule RobotRace.Robot do
 
   alias RobotRace.RobotId
 
-  @derive {Jason.Encoder, only: [:name, :score]}
+  @derive {JSON.Encoder, only: [:name, :score]}
 
   typedstruct do
     field :id, RobotId.t()
