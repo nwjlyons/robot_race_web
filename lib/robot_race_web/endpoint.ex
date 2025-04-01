@@ -16,10 +16,15 @@ defmodule RobotRaceWeb.Endpoint do
   )
 
   plug(Plug.Static,
+    at: "/doc/",
+    from: {:robot_race_web, "priv/static/doc"},
+  )
+
+  plug(Plug.Static,
     at: "/",
     from: :robot_race_web,
     gzip: true,
-    only: ~w(doc assets fonts images favicon.ico robots.txt)
+    only: ~w(assets fonts images favicon.ico robots.txt)
   )
 
   if code_reloading? do
