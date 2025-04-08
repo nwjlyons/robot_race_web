@@ -17,7 +17,7 @@ defmodule RobotRaceWeb.Endpoint do
 
   plug(Plug.Static,
     at: "/robo/doc",
-    from: {:robot_race_web, "priv/static/doc"},
+    from: {:robot_race_web, "priv/static/doc"}
   )
 
   plug(Plug.Static,
