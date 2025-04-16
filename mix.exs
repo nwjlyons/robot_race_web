@@ -41,7 +41,7 @@ defmodule RobotRaceWeb.MixProject do
       {:ecto, "~> 3.12.4"},
       {:phoenix_ecto, "~> 4.4"},
       {:ex_doc, "~> 0.37", runtime: false},
-      {:nanoid, "~> 2.1"},
+      {:nanoid, "~> 2.1"}
     ]
   end
 
