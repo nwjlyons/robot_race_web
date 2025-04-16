@@ -4,9 +4,9 @@ defmodule RobotRaceWeb.JoinGameForm do
   """
   use RobotRaceWeb.Forms
 
-  typedstruct do
-    field :name, String.t(), default: ""
-  end
+  defstruct name: ""
+
+  @type t() :: %__MODULE__{name: String.t()}
 
   @spec changeset(t(), map()) :: Ecto.Changeset.t(t())
   def changeset(%__MODULE__{} = form, %{} = params) do

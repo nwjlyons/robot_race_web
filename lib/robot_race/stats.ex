@@ -3,9 +3,7 @@ defmodule RobotRace.Stats do
   Struct to hold stats about games.
   """
 
-  use TypedStruct
+  defstruct num_games: 0
 
-  typedstruct do
-    field :num_games, non_neg_integer(), default: 0
-  end
+  @type t() :: %__MODULE__{num_games: non_neg_integer()}
 end
