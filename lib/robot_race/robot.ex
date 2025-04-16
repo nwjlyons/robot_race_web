@@ -6,6 +6,7 @@ defmodule RobotRace.Robot do
   alias RobotRace.RobotId
 
   @derive {JSON.Encoder, only: [:name, :score]}
+  @enforce_keys [:id]
 
   defstruct id: nil,
             name: "",
