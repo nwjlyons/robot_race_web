@@ -2,7 +2,6 @@ defmodule RobotRace.Game do
   @moduledoc """
   Game struct and functions.
   """
-  use TypedStruct
   import RobotRace.RobotId
 
   alias RobotRace.GameConfig
@@ -10,17 +9,28 @@ defmodule RobotRace.Game do
   alias RobotRace.Robot
   alias RobotRace.RobotId
 
-  typedstruct do
-    field :id, GameId.t(), enforce: true
-    field :winning_score, pos_integer(), enforce: true
-    field :num_robots, Range.t(pos_integer(), pos_integer()), enforce: true
-    field :countdown, pos_integer(), enforce: true
-    field :config, GameConfig.t(), enforce: true
-    field :robots, %{RobotId.t() => Robot.t()}, default: %{}
-    field :robots_order, list(RobotId.t()), default: []
-    field :state, state(), default: :setup
-    field :previous_wins, %{RobotId.t() => non_neg_integer()}, default: %{}
-  end
+  @enforce_keys [:id, :winning_score, :num_robots, :countdown, :config]
+  defstruct id: nil,
+            winning_score: nil,
+            num_robots: nil,
+            countdown: nil,
+            config: nil,
+            robots: %{},
+            robots_order: [],
+            state: :setup,
+            previous_wins: %{}
+
+  @type t() :: %__MODULE__{
+          id: GameId.t(),
+          winning_score: pos_integer(),
+          num_robots: Range.t(pos_integer(), pos_integer()),
+          countdown: pos_integer(),
+          config: GameConfig.t(),
+          robots: %{RobotId.t() => Robot.t()},
+          robots_order: [RobotId.t()],
+          state: state(),
+          previous_wins: %{RobotId.t() => non_neg_integer()}
+        }
 
   @type state() :: :setup | :counting_down | :playing | :finished
 
