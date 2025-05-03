@@ -7,6 +7,11 @@ defmodule RobotRaceWeb.LobbyLive do
   alias RobotRace.Robot
   alias RobotRaceWeb.JoinGameForm
 
+  # Simulation constants
+  @winning_score 25
+  # Run simulation steps every 1000ms (1 second)
+  @simulation_interval 200
+
   @impl Phoenix.LiveView
   def mount(%{} = params, %{} = _session, %Socket{} = socket) do
     game_id = Map.get(params, "id")
@@ -20,7 +25,9 @@ defmodule RobotRaceWeb.LobbyLive do
        joining?: !!game_id,
        form_action: form_action(game_id),
        trigger_action: false,
-       config: %RobotRace.GameConfig{}
+       config: %RobotRace.GameConfig{},
+       robots: initialize_demo_robots(),
+       simulation_running: false
      )
      |> assign_form(JoinGameForm.changeset(form_schema, %{}))}
   end
@@ -88,16 +95,74 @@ defmodule RobotRaceWeb.LobbyLive do
   end
 
   def handle_event("race_track_mounted", %{} = _params, %Socket{} = socket) do
-    {
-      :noreply,
-      push_event(socket, "game_updated", %{
-        winning_score: 25,
-        robots: [%Robot{score: 0}, %Robot{score: 0}]
-      })
-    }
+    if not socket.assigns.simulation_running do
+      Process.send_after(self(), :simulation_tick, 500)
+
+      {
+        :noreply,
+        socket
+        |> assign(simulation_running: true)
+        |> push_event(
+          "game_updated",
+          %{
+            winning_score: @winning_score,
+            robots: socket.assigns.robots
+          }
+        )
+      }
+    else
+      {:noreply, socket}
+    end
   end
 
   def handle_event(_event, _params, %Socket{} = socket), do: {:noreply, socket}
+
+  @impl Phoenix.LiveView
+  def handle_info(:simulation_tick, socket) do
+    updated_robots = simulate_race_step(socket.assigns.robots)
+    race_finished = Enum.any?(updated_robots, fn robot -> robot.score >= @winning_score end)
+
+    # Schedule next tick if race is not finished
+    if !race_finished do
+      Process.send_after(self(), :simulation_tick, @simulation_interval)
+    end
+
+    # Check if we need to restart with new robots after a delay
+    if race_finished do
+      Process.send_after(self(), :restart_simulation, 3000)
+    end
+
+    {
+      :noreply,
+      socket
+      |> assign(robots: updated_robots)
+      |> push_event(
+        "game_updated",
+        %{
+          winning_score: @winning_score,
+          robots: updated_robots
+        }
+      )
+    }
+  end
+
+  def handle_info(:restart_simulation, socket) do
+    new_robots = initialize_demo_robots()
+    Process.send_after(self(), :simulation_tick, @simulation_interval)
+
+    {
+      :noreply,
+      socket
+      |> assign(robots: new_robots)
+      |> push_event(
+        "game_updated",
+        %{
+          winning_score: @winning_score,
+          robots: new_robots
+        }
+      )
+    }
+  end
 
   defp assign_form(%Socket{} = socket, %Ecto.Changeset{} = changeset) do
     assign(socket, form: to_form(changeset))
@@ -108,4 +173,37 @@ defmodule RobotRaceWeb.LobbyLive do
 
   defp form_action(id),
     do: ~p"/#{id}"
+
+  # Initialize 2-4 robots with names for the demo animation
+  defp initialize_demo_robots do
+    #    num_robots = Enum.random(2..4)
+
+    1..4
+    |> Enum.map(fn _i ->
+      Robot.new("", :guest)
+    end)
+  end
+
+  # Simulate one step of the race with random movements
+  defp simulate_race_step(robots) do
+    robots
+    |> Enum.map(fn robot ->
+      # Each robot has a chance to move up 0, 1, or 2 spaces
+      # Using weighted randomness to make the race interesting
+      score_increase =
+        case :rand.uniform(10) do
+          # 10% chance to not move (stuck)
+          1 -> 0
+          # 60% chance to move 1 space (normal)
+          n when n in 2..7 -> 1
+          # 30% chance to move 2 spaces (boost)
+          _ -> 2
+        end
+
+      # Ensure we don't exceed the winning score
+      new_score = min(robot.score + score_increase, @winning_score)
+
+      %{robot | score: new_score}
+    end)
+  end
 end
