@@ -41,7 +41,7 @@ defmodule RobotRaceWeb do
       import Phoenix.LiveView.Helpers
       import RobotRaceWeb.ErrorHelpers
 
-      use Phoenix.HTML
+      use PhoenixHTMLHelpers
 
       use Phoenix.VerifiedRoutes,
         endpoint: RobotRaceWeb.Endpoint,
