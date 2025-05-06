@@ -15,8 +15,7 @@ defmodule RobotRace.Game do
             num_robots: nil,
             countdown: nil,
             config: nil,
-            robots: %{},
-            robots_order: [],
+            robots: [],
             state: :setup,
             previous_wins: %{}
 
@@ -26,8 +25,7 @@ defmodule RobotRace.Game do
           num_robots: Range.t(pos_integer(), pos_integer()),
           countdown: pos_integer(),
           config: GameConfig.t(),
-          robots: %{RobotId.t() => Robot.t()},
-          robots_order: [RobotId.t()],
+          robots: [Robot.t()],
           state: state(),
           previous_wins: %{RobotId.t() => non_neg_integer()}
         }
@@ -59,52 +57,59 @@ defmodule RobotRace.Game do
     {:error, :game_in_progress}
   end
 
-  def join(%__MODULE__{robots: %{} = robots, num_robots: %Range{last: max_robots}}, %Robot{})
-      when map_size(robots) >= max_robots do
-    {:error, :game_full}
-  end
-
-  def join(%__MODULE__{} = game, %Robot{} = robot) do
-    {:ok,
-     %{
-       game
-       | robots: Map.put(game.robots, robot.id, robot),
-         robots_order: game.robots_order ++ [robot.id]
-     }}
+  def join(
+        %__MODULE__{robots: robots, num_robots: %Range{last: max_robots}} = game,
+        %Robot{} = robot
+      ) do
+    if length(robots) >= max_robots do
+      {:error, :game_full}
+    else
+      {:ok, %{game | robots: robots ++ [robot]}}
+    end
   end
 
   @doc """
   Score a point.
   """
   @spec score_point(t(), RobotId.t()) :: t()
-  def score_point(%__MODULE__{state: :playing} = game, robot_id() = robot_id) do
-    robot = Map.fetch!(game.robots, robot_id)
-    robot = %{robot | score: robot.score + 1}
-    game = %{game | robots: Map.replace!(game.robots, robot.id, robot)}
+  def score_point(%__MODULE__{state: :playing, robots: robots} = game, robot_id() = robot_id) do
+    updated_robots =
+      Enum.map(robots, fn
+        %Robot{id: ^robot_id, score: score} = robot -> %{robot | score: score + 1}
+        robot -> robot
+      end)
 
-    if robot.score >= game.winning_score do
+    updated_robot =
+      Enum.find(updated_robots, fn %Robot{id: id} -> id == robot_id end)
+
+    game = %{game | robots: updated_robots}
+
+    if updated_robot.score >= game.winning_score do
       %{game | state: :finished}
     else
       game
     end
   end
 
-  def score_point(%__MODULE__{} = game, robot_id() = _robot_id), do: game
+  def score_point(%__MODULE__{} = game, _), do: game
 
   @doc """
   List robots by insertion order.
   """
   @spec robots(t()) :: list(Robot.t())
-  def robots(%__MODULE__{} = game) do
-    Enum.map(game.robots_order, &Map.fetch!(game.robots, &1))
-  end
+  def robots(%__MODULE__{} = game), do: game.robots
 
   @doc """
   Is Robot an admin.
   """
   @spec admin?(t(), RobotId.t()) :: boolean()
   def admin?(%__MODULE__{} = game, robot_id() = robot_id) do
-    robot = Map.fetch!(game.robots, robot_id)
+    robot =
+      case Enum.find(game.robots, fn %Robot{id: id} -> id == robot_id end) do
+        nil -> raise KeyError, key: robot_id, term: game.robots
+        r -> r
+      end
+
     robot.role == :admin
   end
 
@@ -135,9 +140,7 @@ defmodule RobotRace.Game do
   """
   @spec score_board(t()) :: list(Robot.t())
   def score_board(%__MODULE__{robots: robots}) do
-    robots
-    |> Map.values()
-    |> Enum.sort_by(fn %Robot{score: score} -> score end, :desc)
+    Enum.sort_by(robots, & &1.score, :desc)
   end
 
   @doc """
@@ -193,7 +196,7 @@ defmodule RobotRace.Game do
   end
 
   defp reset_robot_scores(robots) do
-    Map.new(robots, fn {id, robot} -> {id, %{robot | score: 0}} end)
+    Enum.map(robots, fn robot -> %{robot | score: 0} end)
   end
 
   defp save_winner(%__MODULE__{} = game) do
