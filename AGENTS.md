@@ -1,5 +1,10 @@
 # AGENTS.md
 
+Elixir and erlang versions are specified in the file `.tool-versions`.
+
+1. Download and install Erlang from https://github.com/erlang/otp/releases
+2. Download and install from Elixir from https://github.com/elixir-lang/elixir/releases
+
 ## Build & Test Commands
 ```
 mix deps.get                     # Install dependencies
