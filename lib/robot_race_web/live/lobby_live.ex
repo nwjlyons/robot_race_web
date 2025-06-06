@@ -9,7 +9,7 @@ defmodule RobotRaceWeb.LobbyLive do
 
   # Simulation constants
   @winning_score 25
-  # Run simulation steps every 1000ms (1 second)
+  # Run simulation steps every 200ms (0.2 seconds)
   @simulation_interval 200
 
   @impl Phoenix.LiveView
