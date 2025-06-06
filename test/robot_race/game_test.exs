@@ -99,7 +99,7 @@ defmodule RobotRace.GameTest do
       assert [%Robot{score: 0}] = Game.robots(game)
     end
 
-    test "scores points and tranistions to finished", %{bender: bender} do
+    test "scores points and transitions to finished", %{bender: bender} do
       game = Game.new(%GameConfig{winning_score: 1})
       {:ok, game} = Game.join(game, bender)
       game = Game.play(game)
