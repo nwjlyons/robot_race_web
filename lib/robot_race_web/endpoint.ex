@@ -29,7 +29,6 @@ defmodule RobotRaceWeb.Endpoint do
 
   if code_reloading? do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
-    plug Tidewave
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
   end
