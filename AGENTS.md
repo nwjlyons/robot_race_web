@@ -1,29 +1,20 @@
 # AGENTS.md
 
-Elixir and erlang versions are specified in the file `.tool-versions`.
+## Environment Setup
+- Elixir and Erlang versions are pinned in `.tool-versions`.
+- Install asdf (https://asdf-vm.com/guide/getting-started.html).
+- Add plugins: `asdf plugin add erlang` and `asdf plugin add elixir`.
+- Install versions from `.tool-versions`: `asdf install`.
+- Ensure `asdf` shims are on your `PATH` in your shell config.
 
-1. Download and install Erlang from https://api.github.com/repos/erlang/otp/releases
-2. Download and install from Elixir from https://api.github.com/repos/elixir-lang/elixir/releases
-
-## Build & Test Commands
-```
+## Common Commands
+```bash
 mix deps.get                     # Install dependencies
 mix compile                      # Compile the project
 mix test                         # Run all tests
-mix test path/to/test.exs        # Run specific test file
-mix test path/to/test.exs:42     # Run test at specific line
-mix lint                         # Run formatter and compile
+mix test path/to/test.exs        # Run a specific test file
+mix test path/to/test.exs:42     # Run a test at a specific line
+mix lint                         # Run formatter and compile checks
 mix format                       # Format code
-mix assets.deploy               # Build and minify assets
+mix assets.deploy                # Build and minify assets
 ```
-
-## Code Style Guidelines
-- **Formatting**: Use `mix format` with standard formatter settings
-- **Types**: Define `@type` specs for structs and custom types; use `@spec` for all public functions
-- **Documentation**: Include `@moduledoc` for modules and `@doc` for public functions
-- **Modules**: Use PascalCase for modules, snake_case for functions and variables
-- **Error Handling**: Use tagged tuples like `{:ok, result}` and `{:error, reason}`
-- **Patterns**: Use pattern matching in function clauses, guard clauses for validation
-- **Imports**: Use targeted imports with `only:` option; prefer aliases
-- **Structure**: Public functions first, private functions last
-- **Tests**: Use descriptive `describe` blocks with specific test cases
