@@ -37,6 +37,7 @@ defmodule RobotRaceWeb.MixProject do
       {:phoenix_live_reload, "~> 1.5.3", only: :dev},
       {:phoenix_pubsub, "~> 2.1"},
       {:esbuild, "~> 0.8.2", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:bandit, "~> 1.6"},
       {:ecto, "~> 3.12.4"},
       {:phoenix_ecto, "~> 4.4"},
@@ -87,7 +88,7 @@ defmodule RobotRaceWeb.MixProject do
 
   defp aliases do
     [
-      "assets.deploy": ["esbuild default --minify", "phx.digest"],
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
       "deps.sync": ["deps.get", "deps.clean --unlock --unused"],
       lint: ["format", "compile"]
     ]

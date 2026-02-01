@@ -7,7 +7,7 @@ defmodule RobotRaceWeb.ErrorHelpers do
   def error_tag(form, field) do
     Enum.map(Keyword.get_values(form.errors, field), fn error ->
       content_tag(:div, format_error(error),
-        class: "invalid-feedback font-mono text-red mb-2 text-center text-xs sm:text-base",
+        class: "font-mono text-retro-red mb-2 text-center text-xs sm:text-base",
         phx_feedback_for: input_name(form, field)
       )
     end)

@@ -20,7 +20,7 @@ defmodule RobotRaceWeb.StatsLive do
     ~H"""
     <div>
       <div class="absolute h-full w-full flex flex-col justify-center items-center z-10">
-        <h1 class="text-gray font-mono text-center m-0 text-5">
+        <h1 class="text-retro-gray font-mono text-center m-0 text-[5rem]">
           {@stats.num_games}
         </h1>
       </div>

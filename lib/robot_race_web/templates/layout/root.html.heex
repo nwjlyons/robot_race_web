@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full touch-none">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,7 +16,7 @@
     {csrf_meta_tag()}
     <.live_title default="Robot Race">{assigns[:page_title]}</.live_title>
   </head>
-  <body class="crt-lines bg-black h-full">
+  <body class="relative h-full bg-retro-black after:content-[''] after:absolute after:inset-0 after:pointer-events-none after:bg-[repeating-linear-gradient(0deg,rgba(255,255,255,0.15),rgba(255,255,255,0.15)_1px,transparent_1px,transparent_4px)]">
     {@inner_content}
   </body>
 </html>

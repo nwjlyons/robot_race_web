@@ -1,5 +1,3 @@
-import "../css/normalize.css"
-import "../css/app.css"
 import "phoenix_html"
 
 import { Socket } from "phoenix";

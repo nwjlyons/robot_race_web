@@ -39,12 +39,12 @@ defmodule RobotRaceWeb.LobbyLive do
     <div class="absolute h-full w-full flex flex-col justify-center items-center">
       <div class="p-4">
         <div class="sm:mb-8 text-center">
-          <h1 class="text-gray font-mono text-shadow-green inline-block text-6xl sm:text-7xl m-0">
+          <h1 class="text-retro-gray font-mono inline-block text-[3.5rem] sm:text-[5rem] m-0 [text-shadow:0_0_0.5rem_#ffffff,_0_0_1.5rem_#00ffaa,_1px_1px_0rem_#00ffaa]">
             Robot <br /> Race
           </h1>
         </div>
         <div class="sm:mb-8">
-          <div class="prose text-xs sm:text-base text-center">
+          <div class="font-mono text-retro-gray [text-shadow:0_0_1rem_#d3d3d3] text-xs sm:text-base text-center">
             <p>{@config.num_robots.first} - {@config.num_robots.last} players</p>
             <p>First to the top wins!</p>
             <p>Hit spacebar or tap screen to race</p>
@@ -64,7 +64,7 @@ defmodule RobotRaceWeb.LobbyLive do
                 field={@form[:name]}
                 autofocus
                 placeholder="Name"
-                class="retro-text-input sm:p-4"
+                class="w-full text-center font-mono text-base p-2 sm:p-4 outline-none border-[0.25rem] border-solid border-t-retro-dark-gray border-l-retro-dark-gray border-r-retro-gray border-b-retro-gray bg-white text-retro-black"
                 maxlength="6"
               />
             </div>

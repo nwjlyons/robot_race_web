@@ -28,7 +28,7 @@ defmodule RobotRaceWeb.GameLive do
     <%= case @game.state do %>
       <% :setup -> %>
         <.dialog>
-          <div class="prose">
+          <div class="font-mono text-retro-gray [text-shadow:0_0_1rem_#d3d3d3]">
             <p class="text-center">{if(@admin?, do: "Invite players", else: "Get ready")}</p>
             <%= if @admin? do %>
               <.button
@@ -45,30 +45,28 @@ defmodule RobotRaceWeb.GameLive do
         </.dialog>
       <% :counting_down -> %>
         <.dialog>
-          <h1 class="text-gray font-mono text-center m-0 text-5">
+          <h1 class="text-retro-gray font-mono text-center m-0 text-[5rem]">
             {countdown_text(@game.countdown)}
           </h1>
         </.dialog>
       <% :finished -> %>
         <.dialog>
           <h1 class="text-center m-0 mb-4">
-            <div class="text-gray font-mono text-4">{Game.winner!(@game).name} wins!</div>
+            <div class="text-retro-gray font-mono text-[4rem]">{Game.winner!(@game).name} wins!</div>
             <div class="p-4">
-              <div class="text-center font-mono text-darkgray">Leaderboard</div>
+              <div class="text-center font-mono text-retro-dark-gray">Leaderboard</div>
               <div
                 :for={{%Robot{} = robot, win_count} <- Game.leaderboard(@game)}
                 class="flex justify-between"
               >
-                <div class="text-darkgray font-mono">{robot.name}</div>
-                <div class="text-darkgray font-mono">{win_count}</div>
+                <div class="text-retro-dark-gray font-mono">{robot.name}</div>
+                <div class="text-retro-dark-gray font-mono">{win_count}</div>
               </div>
             </div>
           </h1>
 
-          <div :if={@admin?} class="prose">
-            <button class="retro-button sm:p-4 sm:text-base" phx-click="play_again">
-              Play again
-            </button>
+          <div :if={@admin?} class="font-mono text-retro-gray [text-shadow:0_0_1rem_#d3d3d3]">
+            <.button phx-click="play_again">Play again</.button>
           </div>
         </.dialog>
       <% _other -> %>

@@ -11,7 +11,7 @@ defmodule RobotRaceWeb.Components do
 
   def alert(assigns) do
     ~H"""
-    <div class="text-red font-mono flex flex-col items-center w-full p-4 z-10 h-fit">
+    <div class="text-retro-red font-mono flex flex-col items-center w-full p-4 z-10 h-fit">
       {@msg}
     </div>
     """
@@ -28,7 +28,13 @@ defmodule RobotRaceWeb.Components do
 
   def button(assigns) do
     ~H"""
-    <button class={["retro-button sm:p-4 sm:text-base" | @class]} {@rest}>
+    <button
+      class={[
+        "border-[0.25rem] border-solid border-t-white border-l-white border-r-retro-dark-gray border-b-retro-dark-gray bg-retro-gray text-retro-black font-mono text-xs w-full cursor-pointer p-2 [text-shadow:0_0_0.5rem_#ffffff,_0_0_1.5rem_#00ffaa,_1px_1px_0rem_#00ffaa] active:border-t-retro-dark-gray active:border-l-retro-dark-gray active:border-r-retro-gray active:border-b-retro-gray sm:p-4 sm:text-base"
+        | @class
+      ]}
+      {@rest}
+    >
       {render_slot(@inner_block) || @text}
     </button>
     """
@@ -41,7 +47,7 @@ defmodule RobotRaceWeb.Components do
     ~H"""
     <canvas
       id="racetrack"
-      class="absolute h-full w-full user-select-none"
+      class="absolute h-full w-full select-none"
       phx-update="ignore"
       phx-hook="RaceTrack"
     >
