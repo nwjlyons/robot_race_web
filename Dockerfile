@@ -2,7 +2,7 @@
 ### Fist Stage - Building the Release
 ###
 # https://hub.docker.com/r/hexpm/elixir/tags
-FROM hexpm/elixir:1.18.2-erlang-27.2.2-alpine-3.19.6 AS build
+FROM --platform=linux/amd64 hexpm/elixir:1.20.0-rc.1-erlang-28.3-debian-bullseye-20260202-slim AS build
 
 # install build dependencies
 RUN apk add --no-cache build-base npm git
@@ -52,7 +52,7 @@ RUN mix do compile, release
 ###
 
 # prepare release docker image
-FROM hexpm/elixir:1.18.2-erlang-27.2.2-alpine-3.19.6 AS app
+FROM --platform=linux/amd64 hexpm/elixir:1.20.0-rc.1-erlang-28.3-debian-bullseye-20260202-slim AS app
 RUN apk add --no-cache libstdc++ openssl ncurses-libs
 
 WORKDIR /app
