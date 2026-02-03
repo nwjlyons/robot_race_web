@@ -38,7 +38,7 @@ defmodule RobotRaceWeb.Endpoint do
   plug(Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
-    json_decoder: Phoenix.json_library()
+    json_decoder: JSON
   )
 
   plug(Plug.MethodOverride)
