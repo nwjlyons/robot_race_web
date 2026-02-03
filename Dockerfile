@@ -2,10 +2,13 @@
 ### Fist Stage - Building the Release
 ###
 # https://hub.docker.com/r/hexpm/elixir/tags
-FROM --platform=linux/amd64 hexpm/elixir:1.20.0-rc.1-erlang-28.3-debian-bullseye-20260202-slim AS build
+ARG TARGETPLATFORM
+FROM --platform=$TARGETPLATFORM hexpm/elixir:1.20.0-rc.1-erlang-28.3.1-ubuntu-jammy-20260109 AS build
 
 # install build dependencies
-RUN apk add --no-cache build-base npm git
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends build-essential npm git libncurses6 libtinfo6 \
+    && rm -rf /var/lib/apt/lists/*
 
 # prepare build dir
 WORKDIR /app
@@ -13,9 +16,7 @@ WORKDIR /app
 # extend hex timeout
 ENV HEX_HTTP_TIMEOUT=20
 
-# install hex + rebar
-RUN mix local.hex --force && \
-    mix local.rebar --force
+# install hex + rebar (already available in base image)
 
 # set build ENV as prod
 ENV MIX_ENV=prod
@@ -52,14 +53,17 @@ RUN mix do compile, release
 ###
 
 # prepare release docker image
-FROM --platform=linux/amd64 hexpm/elixir:1.20.0-rc.1-erlang-28.3-debian-bullseye-20260202-slim AS app
-RUN apk add --no-cache libstdc++ openssl ncurses-libs
+ARG TARGETPLATFORM
+FROM --platform=$TARGETPLATFORM hexpm/elixir:1.20.0-rc.1-erlang-28.3.1-ubuntu-jammy-20260109 AS app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libstdc++6 openssl libncurses6 libtinfo6 \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-RUN chown nobody:nobody /app
+RUN chown -R nobody:nogroup /app
 
-USER nobody:nobody
+USER nobody
 
 COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/robot_race_web ./
 
