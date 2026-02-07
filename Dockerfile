@@ -65,7 +65,7 @@ RUN chown -R nobody:nogroup /app
 
 USER nobody
 
-COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/robot_race_web ./
+COPY --from=build --chown=nobody:nogroup /app/_build/prod/rel/robot_race_web ./
 
 ENV HOME=/app
 ENV MIX_ENV=prod
