@@ -3,6 +3,8 @@ defmodule RobotRace.GameId do
   Game ID.
   """
 
+  alias RobotRace.ZigDomain
+
   @prefix "g_"
 
   @typedoc "Game ID prefixed with: #{@prefix}"
@@ -12,7 +14,7 @@ defmodule RobotRace.GameId do
   Generate new game ID.
   """
   @spec new() :: t()
-  def new(), do: @prefix <> RobotRace.Id.new()
+  def new(), do: ZigDomain.call(:new_game_id)
 
   defmacro game_id() do
     quote do
