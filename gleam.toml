@@ -1,0 +1,7 @@
+name = "robot_race_web"
+version = "0.1.0"
+target = "erlang"
+
+[dependencies]
+gleam_stdlib = "~> 0.68"
+gleam_otp = "~> 1.2"
