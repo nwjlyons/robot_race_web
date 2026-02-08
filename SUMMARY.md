@@ -11,12 +11,16 @@ This is a complete rewrite of the Robot Race game from Elixir/Phoenix to Go, mai
 - **Dependencies**: 
   - `gorilla/websocket` - WebSocket handling
   - `google/uuid` - Unique ID generation
-- **Lines of Code**: ~1,300 (internal/ + cmd/)
-- **Binary Size**: ~7MB (compiled)
+  - `redis/go-redis/v9` - Redis pub/sub for multi-server support
+- **Lines of Code**: ~2,100 (internal/ + cmd/)
+- **Binary Size**: ~12MB (compiled)
 
 ### Features Implemented
 ✅ Full multiplayer game (2-10 players)
 ✅ Real-time WebSocket synchronization
+✅ **Redis pub/sub for cross-server communication**
+✅ **True multi-server support with shared game state**
+✅ **Automatic fallback to single-server mode**
 ✅ Game states: setup, countdown, playing, finished
 ✅ HTML5 Canvas rendering
 ✅ Mobile touch and desktop keyboard controls
@@ -28,18 +32,21 @@ This is a complete rewrite of the Robot Race game from Elixir/Phoenix to Go, mai
 ### Architecture
 ```
 robot_race_web/
-├── cmd/server/           # Main application entry point
+├── cmd/server/            # Main application entry point
 ├── internal/
-│   ├── game/            # Core game logic (thread-safe)
-│   ├── hub/             # Game instance & connection management
-│   └── server/          # HTTP & WebSocket server
-├── test.sh              # Integration test suite
-├── run-multiserver.sh   # Multi-instance demo
-└── bin/                 # Compiled binaries
+│   ├── game/             # Core game logic (thread-safe)
+│   ├── hub/              # Game instance & connection management
+│   ├── pubsub/           # Redis pub/sub wrapper
+│   └── server/           # HTTP & WebSocket server
+├── test.sh               # Integration test suite
+├── run-multiserver.sh    # Multi-instance demo
+├── test-multiserver-redis.sh  # Redis multi-server test
+└── bin/                  # Compiled binaries
 ```
 
 ## 🚀 Quick Start
 
+**Single Server Mode:**
 ```bash
 # Build
 go build -o bin/robot-race ./cmd/server
@@ -50,6 +57,19 @@ go build -o bin/robot-race ./cmd/server
 # Visit
 http://localhost:8080
 ```
+
+**Multi-Server Mode (with Redis):**
+```bash
+# Start Redis
+redis-server
+
+# Run multiple servers
+./bin/robot-race -addr :8080 -redis localhost:6379
+./bin/robot-race -addr :8081 -redis localhost:6379
+./bin/robot-race -addr :8082 -redis localhost:6379
+```
+
+See [REDIS.md](REDIS.md) for comprehensive multi-server setup.
 
 ## 🧪 Testing
 

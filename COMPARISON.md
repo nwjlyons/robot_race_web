@@ -105,12 +105,14 @@ func (h *Hub) ScorePoint(gameID, robotID string) {
 - Automatic reconnection
 - Binary protocol option
 - Built-in presence tracking
+- Native distributed messaging (BEAM)
 
 **Go**:
 - Raw WebSocket connections
 - Manual ping/pong handling
 - JSON protocol
 - Manual client tracking
+- Redis pub/sub for distributed messaging
 
 ### Deployment
 
@@ -123,7 +125,7 @@ func (h *Hub) ScorePoint(gameID, robotID string) {
 **Go**:
 - Single binary
 - No hot reloading
-- Stateless (easier horizontal scaling)
+- Redis for state synchronization
 - pprof for profiling
 
 ## Multi-Server Deployment
@@ -133,12 +135,15 @@ The original can use:
 - libcluster for automatic clustering
 - Phoenix.PubSub.PG2 for distributed messages
 - Global registry for cross-node game access
+- Native BEAM distribution protocol
 
-### Go (Manual)
+### Go (Redis-based)
 The new version supports multi-server through:
-- Independent game instances per server
-- Sticky sessions via load balancer
-- Future: Redis pub/sub for cross-server sync
+- Redis pub/sub for cross-server messaging
+- Redis for shared game state storage
+- Automatic fallback to single-server mode
+- Works with standard load balancers
+- Compatible with any Redis-compatible service
 
 ## Testing
 
