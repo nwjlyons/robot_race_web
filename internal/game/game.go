@@ -125,6 +125,11 @@ func (g *Game) GetWinner() *Robot {
 	g.mu.RLock()
 	defer g.mu.RUnlock()
 
+	return g.getWinnerUnsafe()
+}
+
+// getWinnerUnsafe returns the robot with the highest score (without locking)
+func (g *Game) getWinnerUnsafe() *Robot {
 	if len(g.Robots) == 0 {
 		return nil
 	}
@@ -144,7 +149,7 @@ func (g *Game) GetLeaderboard() []LeaderboardEntry {
 	g.mu.RLock()
 	defer g.mu.RUnlock()
 
-	winner := g.GetWinner()
+	winner := g.getWinnerUnsafe()
 	entries := make([]LeaderboardEntry, 0, len(g.Robots))
 
 	for _, robot := range g.Robots {
@@ -175,7 +180,7 @@ func (g *Game) PlayAgain() {
 	g.mu.Lock()
 	defer g.mu.Unlock()
 
-	winner := g.GetWinner()
+	winner := g.getWinnerUnsafe()
 	if winner != nil {
 		g.PreviousWins[winner.ID]++
 	}
