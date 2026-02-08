@@ -3,47 +3,25 @@ defmodule RobotRaceWeb.StatsServer do
   GenServer to hold stats in memory.
   """
 
-  use GenServer
-
   alias RobotRace.Stats
 
-  def start_link(_opts) do
-    GenServer.start_link(__MODULE__, %Stats{}, name: __MODULE__)
+  @spec child_spec(term()) :: Supervisor.child_spec()
+  def child_spec(_opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [[]]},
+      restart: :permanent,
+      type: :worker
+    }
   end
 
-  @impl GenServer
-  def init(%Stats{} = stats) do
-    {:ok, stats}
-  end
+  def start_link(_opts), do: :robot_race_stats_server.start_link()
 
   @spec get() :: Stats.t()
-  def get() do
-    GenServer.call(__MODULE__, :get)
-  end
+  def get(), do: :robot_race_stats_server.get()
 
   @spec increment_num_games() :: Stats.t()
-  def increment_num_games() do
-    GenServer.call(__MODULE__, :increment_num_games)
-  end
+  def increment_num_games(), do: :robot_race_stats_server.increment_num_games()
 
-  @impl GenServer
-  def handle_call(:increment_num_games, _from, %Stats{} = stats) do
-    stats = %{stats | num_games: stats.num_games + 1}
-    broadcast(stats)
-    {:reply, stats, stats}
-  end
-
-  def handle_call(:get, _from, %Stats{} = stats) do
-    {:reply, stats, stats}
-  end
-
-  @event "stats"
-
-  def subscribe() do
-    Phoenix.PubSub.subscribe(RobotRaceWeb.PubSub, @event)
-  end
-
-  defp broadcast(%Stats{} = stats) do
-    RobotRaceWeb.Endpoint.broadcast(@event, "update", %{stats: stats})
-  end
+  def subscribe(), do: :robot_race_stats_server.subscribe()
 end

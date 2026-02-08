@@ -12,7 +12,7 @@ defmodule RobotRace.RobotId do
   Generate new robot ID.
   """
   @spec new() :: t()
-  def new(), do: @prefix <> RobotRace.Id.new()
+  def new(), do: :robot_race_robot_id.new()
 
   defmacro robot_id() do
     quote do
