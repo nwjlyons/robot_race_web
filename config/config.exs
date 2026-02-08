@@ -25,8 +25,17 @@ config :esbuild,
 config :tailwind,
   version: "3.4.13",
   default: [
-    args: ~w(--config=tailwind.config.js --input=css/app.css --output=../priv/static/assets/app.css),
+    args:
+      ~w(--config=tailwind.config.js --input=css/app.css --output=../priv/static/assets/app.css),
     cd: Path.expand("../assets", __DIR__)
   ]
+
+config :pythonx, :uv_init,
+  pyproject_toml: """
+  [project]
+  name = "robot-race-domain"
+  version = "0.1.0"
+  requires-python = ">=3.11,<3.14"
+  """
 
 import_config "#{config_env()}.exs"
