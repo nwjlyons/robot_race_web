@@ -1,13 +1,22 @@
 defmodule RobotRaceWeb.MixProject do
   use Mix.Project
 
+  @app :robot_race_web
   @source_url "https://github.com/nwjlyons/robot_race_web"
 
   def project do
     [
-      app: :robot_race_web,
+      app: @app,
       version: "0.1.0",
       elixir: "~> 1.20.0-rc.1",
+      archives: [mix_gleam: "~> 0.6.2"],
+      compilers: [:gleam | Mix.compilers()],
+      erlc_paths: [
+        "build/dev/erlang/#{@app}/_gleam_artefacts",
+        "build/dev/erlang/#{@app}/build"
+      ],
+      erlc_include_path: "build/dev/erlang/#{@app}/include",
+      prune_code_paths: false,
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -42,6 +51,8 @@ defmodule RobotRaceWeb.MixProject do
       {:ecto, "~> 3.12.4"},
       {:phoenix_ecto, "~> 4.4"},
       {:ex_doc, "~> 0.37", runtime: false},
+      {:gleam_stdlib, "~> 0.68.1"},
+      {:gleam_otp, "~> 1.2"},
       {:nanoid, "~> 2.1"},
       {:phoenix_html_helpers, "~> 1.0"}
     ]
@@ -88,6 +99,7 @@ defmodule RobotRaceWeb.MixProject do
 
   defp aliases do
     [
+      "deps.get": ["deps.get", "gleam.deps.get"],
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
       "deps.sync": ["deps.get", "deps.clean --unlock --unused"],
       lint: ["format", "compile"]

@@ -30,6 +30,10 @@ defmodule RobotRace.Robot do
   """
   @spec new(String.t(), role()) :: t()
   def new(name, role) when is_binary(name) and is_role(role) do
-    %__MODULE__{id: RobotId.new(), name: name, role: role}
+    {id, name, role, score} = :robot_race_robot.new(name, Atom.to_string(role))
+    %__MODULE__{id: id, name: name, role: role_from_string(role), score: score}
   end
+
+  defp role_from_string("admin"), do: :admin
+  defp role_from_string(_), do: :guest
 end
