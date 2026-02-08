@@ -24,6 +24,9 @@ robot_race_web-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+/priv/lib/
+/.Elixir.*.zig
+/lib/**/.Elixir.*.zig
 
 /priv/static/assets/
 
