@@ -32,3 +32,15 @@ robot_race_web-*.tar
 .elixir_ls
 
 /.idea/
+
+# Go build artifacts
+/bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
