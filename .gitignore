@@ -24,6 +24,7 @@ robot_race_web-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+/priv/python/robot_race_domain.log
 
 /priv/static/assets/
 

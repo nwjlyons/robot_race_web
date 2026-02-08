@@ -43,6 +43,7 @@ defmodule RobotRaceWeb.MixProject do
       {:phoenix_ecto, "~> 4.4"},
       {:ex_doc, "~> 0.37", runtime: false},
       {:nanoid, "~> 2.1"},
+      {:pythonx, "~> 0.4"},
       {:phoenix_html_helpers, "~> 1.0"}
     ]
   end

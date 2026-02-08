@@ -2,10 +2,10 @@ defmodule RobotRace.Game do
   @moduledoc """
   Game struct and functions.
   """
-  import RobotRace.RobotId
 
   alias RobotRace.GameConfig
   alias RobotRace.GameId
+  alias RobotRace.PythonDomain
   alias RobotRace.Robot
   alias RobotRace.RobotId
 
@@ -37,13 +37,9 @@ defmodule RobotRace.Game do
   """
   @spec new(GameConfig.t()) :: t()
   def new(%GameConfig{} = config \\ %GameConfig{}) do
-    %__MODULE__{
-      id: GameId.new(),
-      winning_score: config.winning_score,
-      num_robots: config.num_robots,
-      countdown: config.countdown,
-      config: config
-    }
+    :new_game
+    |> PythonDomain.call(%{"config" => GameConfig.to_python(config)})
+    |> from_python()
   end
 
   @type join_error() :: :game_in_progress | :game_full
@@ -52,19 +48,13 @@ defmodule RobotRace.Game do
   Join game.
   """
   @spec join(t(), Robot.t()) :: {:ok, t()} | {:error, join_error()}
-  def join(%__MODULE__{state: state}, %Robot{})
-      when state in [:counting_down, :playing, :finished] do
-    {:error, :game_in_progress}
-  end
+  def join(%__MODULE__{} = game, %Robot{} = robot) do
+    case PythonDomain.call(:join, %{"game" => to_python(game), "robot" => Robot.to_python(robot)}) do
+      %{"status" => "ok", "game" => updated_game} ->
+        {:ok, from_python(updated_game)}
 
-  def join(
-        %__MODULE__{robots: robots, num_robots: %Range{last: max_robots}} = game,
-        %Robot{} = robot
-      ) do
-    if length(robots) >= max_robots do
-      {:error, :game_full}
-    else
-      {:ok, %{game | robots: robots ++ [robot]}}
+      %{"status" => "error", "error" => error} ->
+        {:error, join_error_from_python(error)}
     end
   end
 
@@ -72,75 +62,64 @@ defmodule RobotRace.Game do
   Score a point.
   """
   @spec score_point(t(), RobotId.t()) :: t()
-  def score_point(%__MODULE__{state: :playing, robots: robots} = game, robot_id() = robot_id) do
-    updated_robots =
-      Enum.map(robots, fn
-        %Robot{id: ^robot_id, score: score} = robot -> %{robot | score: score + 1}
-        robot -> robot
-      end)
-
-    updated_robot =
-      Enum.find(updated_robots, fn %Robot{id: id} -> id == robot_id end)
-
-    game = %{game | robots: updated_robots}
-
-    if updated_robot.score >= game.winning_score do
-      %{game | state: :finished}
-    else
-      game
-    end
+  def score_point(%__MODULE__{} = game, robot_id) when is_binary(robot_id) do
+    :score_point
+    |> PythonDomain.call(%{"game" => to_python(game), "robot_id" => robot_id})
+    |> from_python()
   end
 
-  def score_point(%__MODULE__{} = game, _), do: game
+  def score_point(%__MODULE__{} = game, _robot_id), do: game
 
   @doc """
   List robots by insertion order.
   """
   @spec robots(t()) :: list(Robot.t())
-  def robots(%__MODULE__{} = game), do: game.robots
+  def robots(%__MODULE__{} = game) do
+    :robots
+    |> PythonDomain.call(%{"game" => to_python(game)})
+    |> Enum.map(&Robot.from_python/1)
+  end
 
   @doc """
   Is Robot an admin.
   """
   @spec admin?(t(), RobotId.t()) :: boolean()
-  def admin?(%__MODULE__{} = game, robot_id() = robot_id) do
-    robot =
-      case Enum.find(game.robots, fn %Robot{id: id} -> id == robot_id end) do
-        nil -> raise KeyError, key: robot_id, term: game.robots
-        r -> r
-      end
-
-    robot.role == :admin
+  def admin?(%__MODULE__{} = game, robot_id) when is_binary(robot_id) do
+    case PythonDomain.call(:admin, %{"game" => to_python(game), "robot_id" => robot_id}) do
+      true -> true
+      false -> false
+      nil -> raise KeyError, key: robot_id, term: game.robots
+    end
   end
 
   @doc """
   Play game.
   """
   @spec play(t()) :: t()
-  def play(%__MODULE__{} = game), do: %{game | state: :playing}
+  def play(%__MODULE__{} = game) do
+    :play
+    |> PythonDomain.call(%{"game" => to_python(game)})
+    |> from_python()
+  end
 
   @doc """
   Countdown to start.
   """
   @spec countdown(t()) :: t()
-  def countdown(%__MODULE__{state: :setup} = game) do
-    %{game | state: :counting_down}
-  end
-
-  def countdown(%__MODULE__{countdown: countdown} = game) when countdown > 0 do
-    %{game | state: :counting_down, countdown: countdown - 1}
-  end
-
-  def countdown(%__MODULE__{countdown: 0} = game) do
-    %{game | state: :playing}
+  def countdown(%__MODULE__{} = game) do
+    :countdown
+    |> PythonDomain.call(%{"game" => to_python(game)})
+    |> from_python()
   end
 
   @doc """
   List robots by score in descending order.
   """
   @spec score_board(t()) :: list(Robot.t())
-  def score_board(%__MODULE__{robots: robots}) do
-    Enum.sort_by(robots, & &1.score, :desc)
+  def score_board(%__MODULE__{} = game) do
+    :score_board
+    |> PythonDomain.call(%{"game" => to_python(game)})
+    |> Enum.map(&Robot.from_python/1)
   end
 
   @doc """
@@ -158,15 +137,9 @@ defmodule RobotRace.Game do
   """
   @spec play_again(t()) :: t()
   def play_again(%__MODULE__{} = game) do
-    %{
-      game
-      | winning_score: game.config.winning_score,
-        num_robots: game.config.num_robots,
-        countdown: game.config.countdown,
-        robots: reset_robot_scores(game.robots),
-        state: :setup,
-        previous_wins: save_winner(game)
-    }
+    :play_again
+    |> PythonDomain.call(%{"game" => to_python(game)})
+    |> from_python()
   end
 
   @doc """
@@ -176,30 +149,74 @@ defmodule RobotRace.Game do
   """
   @spec leaderboard(t()) :: list({Robot.t(), non_neg_integer()})
   def leaderboard(%__MODULE__{} = game) do
-    current_winner_id = winner!(game).id
-
-    game
-    |> robots()
-    |> Enum.map(fn %Robot{} = robot ->
-      previous_win_count = Map.get(game.previous_wins, robot.id, 0)
-
-      win_count =
-        if current_winner_id == robot.id do
-          previous_win_count + 1
-        else
-          previous_win_count
-        end
-
-      {robot, win_count}
-    end)
-    |> Enum.sort_by(fn {%Robot{}, score} -> score end, :desc)
+    :leaderboard
+    |> PythonDomain.call(%{"game" => to_python(game)})
+    |> Enum.map(fn {robot, score} -> {Robot.from_python(robot), score} end)
   end
 
-  defp reset_robot_scores(robots) do
-    Enum.map(robots, fn robot -> %{robot | score: 0} end)
+  @spec to_python(t()) :: map()
+  def to_python(%__MODULE__{} = game) do
+    %{
+      "id" => game.id,
+      "winning_score" => game.winning_score,
+      "num_robots" => range_to_python(game.num_robots),
+      "countdown" => game.countdown,
+      "config" => GameConfig.to_python(game.config),
+      "robots" => Enum.map(game.robots, &Robot.to_python/1),
+      "state" => state_to_python(game.state),
+      "previous_wins" => game.previous_wins
+    }
   end
 
-  defp save_winner(%__MODULE__{} = game) do
-    Map.update(game.previous_wins, winner!(game).id, 1, &(&1 + 1))
+  @spec from_python(map()) :: t()
+  def from_python(%{
+        "id" => id,
+        "winning_score" => winning_score,
+        "num_robots" => num_robots,
+        "countdown" => countdown,
+        "config" => config,
+        "robots" => robots,
+        "state" => state,
+        "previous_wins" => previous_wins
+      }) do
+    %__MODULE__{
+      id: id,
+      winning_score: winning_score,
+      num_robots: range_from_python(num_robots),
+      countdown: countdown,
+      config: GameConfig.from_python(config),
+      robots: Enum.map(robots, &Robot.from_python/1),
+      state: state_from_python(state),
+      previous_wins: previous_wins
+    }
+  end
+
+  defp join_error_from_python("game_in_progress"), do: :game_in_progress
+  defp join_error_from_python("game_full"), do: :game_full
+
+  defp state_to_python(:setup), do: "setup"
+  defp state_to_python(:counting_down), do: "counting_down"
+  defp state_to_python(:playing), do: "playing"
+  defp state_to_python(:finished), do: "finished"
+
+  defp state_from_python("setup"), do: :setup
+  defp state_from_python("counting_down"), do: :counting_down
+  defp state_from_python("playing"), do: :playing
+  defp state_from_python("finished"), do: :finished
+
+  defp range_to_python(%Range{} = range) do
+    %{
+      "first" => range.first,
+      "last" => range.last,
+      "step" => range.step
+    }
+  end
+
+  defp range_from_python(%{"first" => first, "last" => last, "step" => step}) do
+    first..last//step
+  end
+
+  defp range_from_python(%{"first" => first, "last" => last}) do
+    first..last
   end
 end
