@@ -6,15 +6,18 @@ A multiplayer racing game written in Go with WebSocket support. Players race rob
 
 - **Real-time multiplayer**: Multiple players can join the same game
 - **WebSocket-based**: Real-time game state synchronization
-- **Distributed architecture**: Can run on multiple servers with players connecting to different instances
+- **Redis pub/sub**: True multi-server support with cross-server communication
+- **Distributed architecture**: Players on different servers can play together
 - **Responsive design**: Works on desktop and mobile devices
 - **Retro aesthetic**: Pixel art style with glowing robots
+- **Graceful fallback**: Works without Redis in single-server mode
 
 ## Quick Start
 
 ### Prerequisites
 
 - Go 1.21 or higher
+- Redis (optional, for multi-server mode)
 
 ### Installation
 
@@ -32,6 +35,7 @@ go build -o bin/robot-race ./cmd/server
 
 ### Running the Server
 
+**Single Server Mode (Default)**:
 ```bash
 # Run with default settings (port 8080)
 ./bin/robot-race
@@ -40,7 +44,21 @@ go build -o bin/robot-race ./cmd/server
 ./bin/robot-race -addr :3000
 ```
 
+**Multi-Server Mode (with Redis)**:
+```bash
+# Start Redis first
+redis-server
+
+# Run server with Redis
+./bin/robot-race -addr :8080 -redis localhost:6379
+
+# With password
+./bin/robot-race -addr :8080 -redis localhost:6379 -redis-password yourpassword
+```
+
 Then open your browser to `http://localhost:8080`
+
+See [REDIS.md](REDIS.md) for comprehensive multi-server deployment guide.
 
 ## How to Play
 
