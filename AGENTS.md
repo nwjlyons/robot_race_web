@@ -1,11 +1,10 @@
 # AGENTS.md
 
 ## Environment Setup
-- Elixir and Erlang versions are pinned in `.tool-versions`.
-- Install asdf (https://asdf-vm.com/guide/getting-started.html).
-- Add plugins: `asdf plugin add erlang` and `asdf plugin add elixir`.
-- Install versions from `.tool-versions`: `asdf install`.
-- Ensure `asdf` shims are on your `PATH` in your shell config.
+- Elixir and Erlang versions are pinned in `mise.toml`.
+- Install mise (https://mise.jdx.dev/getting-started.html).
+- Install the pinned tool versions: `mise install`.
+- Activate mise in your shell (https://mise.jdx.dev/getting-started.html#activate-mise).
 
 ## Common Commands
 ```bash

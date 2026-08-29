@@ -15,7 +15,7 @@ defmodule RobotRaceWeb.GameServer do
 
   require Logger
 
-  @timeout_in_ms :timer.minutes(10)
+  @timeout_in_ms to_timeout(minute: 10)
 
   @doc """
   Create new game server process.

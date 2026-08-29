@@ -41,7 +41,7 @@ defmodule RobotRaceWeb.MixProject do
       {:bandit, "~> 1.6"},
       {:ecto, "~> 3.12.4"},
       {:phoenix_ecto, "~> 4.4"},
-      {:ex_doc, "~> 0.37", runtime: false},
+      {:ex_doc, "~> 0.37", only: :docs, runtime: false},
       {:nanoid, "~> 2.1"},
       {:phoenix_html_helpers, "~> 1.0"}
     ]
