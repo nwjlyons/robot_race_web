@@ -10,7 +10,7 @@ if config_env() == :prod do
 
   config :robot_race_web, RobotRaceWeb.Endpoint,
     server: true,
-    url: [scheme: "https", host: System.get_env("HOST"), port: 443],
+    url: [scheme: "https", host: System.fetch_env!("HOST"), port: 443],
     http: [
       port: String.to_integer(System.get_env("PORT") || "4000"),
       # IMPORTANT: support IPv6 addresses

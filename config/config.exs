@@ -1,9 +1,12 @@
 import Config
 
+host = System.get_env("HOST", "localhost")
+port = String.to_integer(System.get_env("PORT", "4000"))
+
 config :robot_race_web, RobotRaceWeb.Endpoint,
   adapter: Bandit.PhoenixAdapter,
-  url: [host: "localhost"],
-  http: [port: 4000],
+  url: [scheme: "http", host: host, port: port],
+  http: [port: port],
   pubsub_server: RobotRaceWeb.PubSub,
   secret_key_base: "gn4l7o7fa1MsV0wAbE6wVzb2kX6/TQKmnn6OA7TnHnbn3pxmYi0pppJNfXUGiXts",
   live_view: [signing_salt: "V/Dpj928QGehEzOFm44bIa0nxqtUUU8PY0+QP3O8CdtcurRw3C27Scy7GCvH6Xdf"]
