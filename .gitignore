@@ -32,3 +32,5 @@ robot_race_web-*.tar
 .elixir_ls
 
 /.idea/
+
+/.env

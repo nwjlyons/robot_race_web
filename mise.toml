@@ -3,5 +3,4 @@ elixir = "1.20.0-rc.1"
 erlang = "28.3.1"
 
 [env]
-HOST = "100.100.134.126"
-PORT = "4000"
+_.file = ".env"
