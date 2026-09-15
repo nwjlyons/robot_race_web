@@ -4,6 +4,7 @@ defmodule RobotRace.Robot do
   """
 
   alias RobotRace.RobotId
+  alias RobotRace.ZigDomain
 
   @derive {JSON.Encoder, only: [:name, :score]}
 
@@ -30,6 +31,28 @@ defmodule RobotRace.Robot do
   """
   @spec new(String.t(), role()) :: t()
   def new(name, role) when is_binary(name) and is_role(role) do
-    %__MODULE__{id: RobotId.new(), name: name, role: role}
+    :new_robot
+    |> ZigDomain.call(%{name: name, role: role})
+    |> from_zig()
+  end
+
+  @spec to_zig(t()) :: map()
+  def to_zig(%__MODULE__{} = robot) do
+    %{
+      id: robot.id,
+      name: robot.name,
+      role: robot.role,
+      score: robot.score
+    }
+  end
+
+  @spec from_zig(map()) :: t()
+  def from_zig(%{id: id, name: name, role: role, score: score}) do
+    %__MODULE__{
+      id: id,
+      name: name,
+      role: role,
+      score: score
+    }
   end
 end
